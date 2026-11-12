@@ -4,26 +4,39 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Abishekshivram A M | Digital Design Engineer</title>
-<meta name="description" content="Digital design engineer at Texas Instruments building DSP and calibration logic for high-speed RF data converters, from RTL and bit-accurate modeling through verification and post-silicon validation.">
+<meta name="description" content="Digital design engineer at Texas Instruments building high-throughput arithmetic datapaths and the tools that generate them, from RTL and bit-accurate modeling through verification and post-silicon validation.">
 <link rel="canonical" href="https://abishekshivram.github.io/">
 <meta property="og:type" content="profile">
 <meta property="og:url" content="https://abishekshivram.github.io/">
 <meta property="og:title" content="Abishekshivram A M | Digital Design Engineer">
-<meta property="og:description" content="Digital design engineer at Texas Instruments building DSP and calibration logic for high-speed RF data converters.">
+<meta property="og:description" content="Digital design engineer at Texas Instruments building high-throughput arithmetic datapaths and the tools that generate them.">
 <meta name="twitter:card" content="summary">
 <meta name="color-scheme" content="light dark">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230d6e66'/%3E%3Cpath d='M12 40h10V24h10v16h10V24h10' fill='none' stroke='%23fff' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<script>
+  try {
+    const theme = localStorage.getItem('theme');
+    if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+  } catch {}
+</script>
 <link rel="stylesheet" href="style.css">
+<script src="script.js" defer></script>
 </head>
 <body>
 <div class="layout">
 
   <header class="intro">
-    <svg class="wave" viewBox="0 0 86 18" aria-hidden="true"><path d="M1 17h12V1h12v16h12V1h12v16h12V1h12v16h12"/></svg>
+    <div class="intro-top">
+      <svg class="wave" viewBox="0 0 86 18" aria-hidden="true"><path d="M1 17h12V1h12v16h12V1h12v16h12V1h12v16h12"/></svg>
+      <button class="icon-button theme-toggle" type="button" aria-label="Switch to dark theme" title="Switch to dark theme">
+        <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
     <h1>Abishekshivram A M</h1>
     <p class="headline">Digital Design Engineer<br>Texas Instruments</p>
     <p class="place">Bengaluru, India</p>
-    <p class="tagline">DSP, calibration, and design automation for high-speed RF data converters.</p>
+    <p class="tagline">I build high-throughput arithmetic datapaths and the tools that generate them.</p>
     <nav aria-label="Sections">
       <ul>
         <li><a href="#about">About</a></li>
@@ -36,6 +49,7 @@
     <ul class="links">
       <li><a class="button" href="Abishekshivram_resume.pdf">Resume (PDF)</a></li>
       <li><a href="mailto:abishekshivramam@gmail.com">abishekshivramam@gmail.com</a></li>
+      <li><a href="mailto:abishekshivramam@gmail.com?subject=Phone%20number%20request" aria-haspopup="dialog" data-phone-request>Request phone number</a></li>
       <li><a href="https://www.linkedin.com/in/abishekshivram">LinkedIn</a></li>
       <li><a href="https://github.com/abishekshivram">GitHub</a></li>
     </ul>
@@ -45,7 +59,7 @@
 
     <section id="about">
       <h2>About</h2>
-      <p class="about">I've been on Texas Instruments' High-Speed Converters team since 2022, designing DSP and calibration logic for RF data converters and carrying it from architecture and RTL through bit-accurate modeling, verification, and post-silicon validation. I also build tools that automate this work, including <code>dp_gen</code>, a compiler that turns Python descriptions of DSP datapaths into optimized SystemVerilog with bit-exact golden models. I studied electrical engineering at IIT Madras and have taught computer architecture and RISC-V to 150+ undergraduates.</p>
+      <p class="about">I design arithmetic-heavy digital hardware at Texas Instruments: the DSP and calibration datapaths inside high-speed RF data converters, taken from architecture and RTL through bit-accurate modeling, verification, and post-silicon validation. I also build tools that automate this work. <code>dp_gen</code>, my Python-to-SystemVerilog compiler, fuses arithmetic chains into carry-save trees and generates bit-exact golden models for verification. My IIT Madras thesis was on in-memory compute, and I've taught computer architecture and RISC-V to 150+ undergraduates.</p>
     </section>
 
     <section id="experience">
@@ -63,10 +77,10 @@
               <span class="dates">Jul 2022 – Present</span>
             </div>
             <ul>
-              <li><strong>Calibration and error correction.</strong> Built and verified the digital error correction and background calibration subsystems for high-speed pipelined RF ADCs, driving closure across analog, mixed-signal verification, firmware, and lab teams. Hardened a space-grade variant for radiation tolerance with SEU-resilient calibration registers.</li>
+              <li><strong>Datapath compiler.</strong> Architected and sole-authored <code>dp_gen</code>, a Python-to-SystemVerilog compiler that infers bit-widths, fuses arithmetic chains into truncated CSA trees across multi-phase clocks, and auto-derives bit-exact golden Python models for cocotb equivalence checking, collapsing days of hand-written DSP RTL into seconds.</li>
               <li><strong>DSP architecture.</strong> Architected and implemented RTL for high-performance DSP modules, including digital down- and up-converters (DDC/DUC) for high-speed AFEs, with a novel hitless rate-switching mechanism that maintains absolute phase determinism relative to SYSREF.</li>
               <li><strong>Modeling and verification.</strong> Developed Python bit-accurate models for SNR/SFDR analysis and used them to set up cocotb verification regressions. Ran synthesis-driven design-space exploration (PPA) to optimize retiming and pipelining.</li>
-              <li><strong>Design automation.</strong> Architected and sole-authored <code>dp_gen</code>, a Python-to-SystemVerilog compiler that infers bit-widths, fuses arithmetic chains into truncated CSA trees across multi-phase clocks, and auto-derives bit-exact golden Python models for cocotb equivalence checking, collapsing days of hand-written DSP RTL into seconds.</li>
+              <li><strong>Calibration and error correction.</strong> Built and verified the digital error correction and background calibration subsystems for high-speed pipelined RF ADCs, driving closure across analog, mixed-signal verification, firmware, and lab teams. Hardened a space-grade variant for radiation tolerance with SEU-resilient calibration registers.</li>
               <li><strong>Post-silicon validation.</strong> Led post-silicon validation for these modules, writing test cases that cover JESD protocols and devising black-box debug strategies to resolve functional issues with limited visibility.</li>
               <li><strong>Mentoring.</strong> Mentored an intern building an agentic AI framework for DSP RTL development, covering spec-to-RTL generation, testcase generation with self-simulation, and lint fixes.</li>
               <li><strong>Teaching.</strong> Designed and delivered workshops and lectures on computer architecture and RISC-V for 150+ sophomores over three years in the WISH program, including lab exercises that guide students to implement a RISC-V core in a week.</li>
@@ -129,7 +143,7 @@
 
         <article class="project featured">
           <p class="context"><span>B.Tech thesis, IIT Madras</span><span>2022</span></p>
-          <h3>Reference SAR ADC and RL-driven sizing for in-memory compute</h3>
+          <h3>In-memory compute: reference SAR ADC and RL-driven sizing</h3>
           <p>Designed a 6-bit reference SAR ADC that tracks PVT variation in the SRAM-based IMDACs of an in-memory compute macro, chosen for its area efficiency and accuracy. Built a Python and Spectre API framework that automates netlist generation, simulation scheduling, metric extraction, and iterative transistor sizing and bias tuning for column sense amplifiers, progressing from negative-feedback tuning to a Q-learning agent for faster, more stable convergence.</p>
           <ul class="tags"><li>SAR ADC</li><li>Spectre</li><li>Python</li><li>Q-learning</li></ul>
         </article>
@@ -177,10 +191,11 @@
       <h2>Skills</h2>
       <dl class="skills">
         <div><dt>Languages</dt><dd>SystemVerilog, Verilog, Bluespec SystemVerilog, Python</dd></div>
-        <div><dt>Design</dt><dd>DSP datapaths (DDC/DUC), ADC calibration and error correction, pipelining and retiming, CSA trees, radiation-tolerant design, synthesis and PPA</dd></div>
-        <div><dt>Verification</dt><dd>cocotb, bit-accurate modeling, SNR/SFDR analysis, post-silicon validation, JESD protocols</dd></div>
+        <div><dt>Design</dt><dd>Arithmetic datapaths and CSA trees, DSP (DDC/DUC), pipelining and retiming, synthesis and PPA, ADC calibration and error correction, radiation-tolerant design</dd></div>
+        <div><dt>Verification</dt><dd>cocotb, bit-accurate golden models, SNR/SFDR analysis, post-silicon validation, JESD protocols</dd></div>
+        <div><dt>Architecture</dt><dd>In-memory compute, networks-on-chip, RISC-V and computer architecture</dd></div>
         <div><dt>Tools</dt><dd>OpenFPGA/VPR, Spectre, LTSpice, Electric, TensorFlow</dd></div>
-        <div><dt>Also</dt><dd>Computer architecture and RISC-V, embedded systems (STM32), PCB design, reinforcement learning</dd></div>
+        <div><dt>Also</dt><dd>Embedded systems (STM32), PCB design, reinforcement learning</dd></div>
       </dl>
     </section>
 
@@ -201,5 +216,28 @@
 
   </main>
 </div>
+
+<dialog class="modal" id="phone-dialog" aria-labelledby="phone-title">
+  <div class="modal-body">
+    <div class="modal-head">
+      <h2 id="phone-title">Request my phone number</h2>
+      <button class="icon-button" type="button" data-close aria-label="Close">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <p class="modal-note">I share my number on request. Leave your details and I'll get back to you by email.</p>
+    <form>
+      <input type="checkbox" name="botcheck" hidden tabindex="-1" autocomplete="off">
+      <label class="field"><span>Name</span><input name="name" required autocomplete="name" autofocus></label>
+      <label class="field"><span>Email</span><input type="email" name="email" required autocomplete="email"></label>
+      <label class="field"><span>Company <small>(optional)</small></span><input name="company" autocomplete="organization"></label>
+      <label class="field"><span>Message <small>(optional)</small></span><textarea name="message" rows="3"></textarea></label>
+      <div class="form-actions">
+        <button class="button" type="submit">Send request</button>
+        <p class="form-status" role="status"></p>
+      </div>
+    </form>
+  </div>
+</dialog>
 </body>
 </html>

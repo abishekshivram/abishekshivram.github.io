@@ -1,30 +1,20 @@
 :root {
-  --bg: #f8f7f4;
-  --card: #ffffff;
-  --text: #1b1d1f;
-  --muted: #5b6168;
-  --line: #e3e0da;
-  --accent: #0d6e66;
-  --accent-ink: #ffffff;
-  --tag-bg: #e8f2f0;
-  --tag-text: #0d5b55;
+  color-scheme: light dark;
+  --bg: light-dark(#f8f7f4, #0f1214);
+  --card: light-dark(#ffffff, #161a1d);
+  --text: light-dark(#1b1d1f, #e6e4e0);
+  --muted: light-dark(#5b6168, #9aa1a8);
+  --line: light-dark(#e3e0da, #262b30);
+  --accent: light-dark(#0d6e66, #4fc1b6);
+  --accent-ink: light-dark(#ffffff, #0b1f1d);
+  --tag-bg: light-dark(#e8f2f0, #13302d);
+  --tag-text: light-dark(#0d5b55, #7fd6cc);
   --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0f1214;
-    --card: #161a1d;
-    --text: #e6e4e0;
-    --muted: #9aa1a8;
-    --line: #262b30;
-    --accent: #4fc1b6;
-    --accent-ink: #0b1f1d;
-    --tag-bg: #13302d;
-    --tag-text: #7fd6cc;
-  }
-}
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }
 
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -47,7 +37,7 @@ h1, h3 { text-wrap: balance; }
 p, li, dd { text-wrap: pretty; }
 
 a { color: var(--accent); text-underline-offset: 3px; }
-a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+:is(a, button):focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 code { font-family: var(--mono); font-size: 0.88em; }
 
 .layout {
@@ -60,17 +50,60 @@ code { font-family: var(--mono); font-size: 0.88em; }
 
 .intro { margin-bottom: 56px; }
 
+.intro-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
 .wave {
   display: block;
   width: 64px;
   height: 14px;
-  margin-bottom: 20px;
   fill: none;
   stroke: var(--accent);
   stroke-width: 2;
   stroke-linejoin: round;
   stroke-linecap: round;
   overflow: visible;
+}
+
+.icon-button {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.icon-button:hover { color: var(--text); border-color: var(--muted); }
+
+.icon-button svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.theme-toggle .icon-sun,
+:root[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+:root[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-toggle .icon-moon { display: none; }
+  :root:not([data-theme="light"]) .theme-toggle .icon-sun { display: block; }
 }
 
 .intro h1 {
@@ -110,27 +143,32 @@ code { font-family: var(--mono); font-size: 0.88em; }
   font-size: 0.95rem;
 }
 
-.links li:nth-child(-n+2) { flex-basis: 100%; }
+.links li:nth-child(-n+3) { flex-basis: 100%; }
 .links li:first-child { margin-bottom: 6px; }
 
 .button {
   display: inline-block;
   padding: 9px 18px;
+  border: 0;
   border-radius: 8px;
   background: var(--accent);
   color: var(--accent-ink);
+  font: inherit;
+  font-size: 0.95rem;
   font-weight: 600;
   text-decoration: none;
+  cursor: pointer;
 }
 
 .button:hover { filter: brightness(1.1); }
+.button:disabled { opacity: 0.6; cursor: progress; }
 
 /* Sections */
 
 section { margin-bottom: 72px; scroll-margin-top: 32px; }
 section:last-child { margin-bottom: 0; }
 
-h2 {
+section > h2 {
   display: flex;
   align-items: center;
   gap: 14px;
@@ -143,7 +181,7 @@ h2 {
   color: var(--accent);
 }
 
-h2::after {
+section > h2::after {
   content: "";
   flex: 1;
   height: 1px;
@@ -291,6 +329,76 @@ main { container-type: inline-size; }
 .degree { margin-top: 8px; }
 .gpa { margin-top: 2px; color: var(--muted); font-size: 0.95rem; }
 
+/* Phone request dialog */
+
+.modal {
+  width: min(460px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card);
+  color: var(--text);
+  box-shadow: 0 24px 60px rgb(0 0 0 / 0.3);
+}
+
+.modal::backdrop { background: rgb(8 10 12 / 0.55); }
+
+.modal-body { padding: 24px; }
+
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.modal-head h2 { font-size: 1.15rem; letter-spacing: -0.01em; }
+
+.modal-note {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 0.93rem;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+  margin-top: 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.field small { font-size: inherit; font-weight: 400; color: var(--muted); }
+
+.field input,
+.field textarea {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 400;
+}
+
+.field textarea { min-height: 84px; resize: vertical; }
+
+.field input:focus-visible,
+.field textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: -1px; }
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+  margin-top: 20px;
+}
+
+.form-status { font-size: 0.9rem; color: var(--muted); }
+
 /* Two-column layout */
 
 @media (min-width: 1024px) {
@@ -304,10 +412,10 @@ main { container-type: inline-size; }
   .intro {
     align-self: start;
     margin-bottom: 0;
-    padding: clamp(48px, 10vh, 96px) 0 clamp(32px, 6vh, 48px);
+    padding: clamp(40px, 9vh, 96px) 0 clamp(24px, 5vh, 48px);
   }
 
-  .intro nav { display: block; margin-top: clamp(24px, 5vh, 40px); }
+  .intro nav { display: block; margin-top: clamp(20px, 4vh, 40px); }
 
   .intro nav ul { list-style: none; padding: 0; }
 
@@ -335,9 +443,9 @@ main { container-type: inline-size; }
   .intro nav a:hover { color: var(--text); }
   .intro nav a:hover::before { width: 44px; }
 
-  .links { margin-top: clamp(24px, 5vh, 40px); }
+  .links { margin-top: clamp(20px, 4vh, 40px); }
 
-  main { padding: clamp(48px, 10vh, 96px) 0 96px; }
+  main { padding: clamp(40px, 9vh, 96px) 0 96px; }
 }
 
 @media (min-width: 1024px) and (min-height: 700px) {
