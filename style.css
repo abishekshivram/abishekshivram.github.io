@@ -209,6 +209,11 @@ strong { font-weight: 700; }
 }
 
 .affiliation strong { color: var(--ink); font-weight: 600; }
+.affiliation-edu { margin-top: 4px; }
+
+.front-side .table-wrap { margin-top: 0; }
+.front-side .pkg-table caption { display: none; }
+.front-side .pkg-table tbody th { width: 8.5em; }
 
 /* Items wrap cleanly: each separator hangs off the left edge and is clipped when it starts a line. */
 .sep-list { display: flex; flex-wrap: wrap; margin-left: -22px; }
