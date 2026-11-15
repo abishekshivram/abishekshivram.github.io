@@ -45,10 +45,12 @@ const phoneForm = phoneDialog.querySelector('form');
 const formStatus = phoneDialog.querySelector('.form-status');
 const submitButton = phoneForm.querySelector('[type="submit"]');
 
-document.querySelector('[data-phone-request]').addEventListener('click', event => {
-  event.preventDefault();
-  phoneDialog.showModal();
-});
+for (const trigger of document.querySelectorAll('[data-phone-request]')) {
+  trigger.addEventListener('click', event => {
+    event.preventDefault();
+    phoneDialog.showModal();
+  });
+}
 phoneDialog.querySelector('[data-close]').addEventListener('click', () => phoneDialog.close());
 phoneDialog.addEventListener('close', () => formStatus.replaceChildren());
 

@@ -14,38 +14,44 @@
 <meta name="color-scheme" content="light dark">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230d6e66'/%3E%3Cpath d='M12 40h10V24h10v16h10V24h10' fill='none' stroke='%23fff' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <script>
+  document.documentElement.classList.add('js');
   try {
     const theme = localStorage.getItem('theme');
     if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
   } catch {}
 </script>
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="die.css">
 <script src="script.js" defer></script>
+<script src="die.js" defer></script>
 </head>
 <body>
-<div class="layout">
 
-  <header class="intro">
-    <div class="intro-top">
-      <svg class="wave" viewBox="0 0 86 18" aria-hidden="true"><path d="M1 17h12V1h12v16h12V1h12v16h12V1h12v16h12"/></svg>
-      <button class="icon-button theme-toggle" type="button" aria-label="Switch to dark theme" title="Switch to dark theme">
-        <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-        <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
-      </button>
-    </div>
+<header class="topbar">
+  <a class="brand" href="#top" aria-label="Back to top">
+    <svg class="wave" viewBox="0 0 86 18" aria-hidden="true"><path d="M1 17h12V1h12v16h12V1h12v16h12V1h12v16h12"/></svg>
+  </a>
+  <nav aria-label="Sections">
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#education">Education</a></li>
+    </ul>
+  </nav>
+  <button class="icon-button theme-toggle" type="button" aria-label="Switch to dark theme" title="Switch to dark theme">
+    <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+  </button>
+</header>
+
+<div class="hero" id="top">
+  <div class="intro">
     <h1>Abishekshivram A M</h1>
     <p class="headline">Digital Design Engineer<br>Texas Instruments</p>
     <p class="place">Bengaluru, India</p>
     <p class="tagline">I build high-throughput arithmetic datapaths and the tools that generate them.</p>
-    <nav aria-label="Sections">
-      <ul>
-        <li><a href="#about">About</a></li>
-        <li><a href="#experience">Experience</a></li>
-        <li><a href="#projects">Projects</a></li>
-        <li><a href="#skills">Skills</a></li>
-        <li><a href="#education">Education</a></li>
-      </ul>
-    </nav>
     <ul class="links">
       <li><a class="button" href="Abishekshivram_resume.pdf">Resume (PDF)</a></li>
       <li><a href="mailto:abishekshivramam@gmail.com">abishekshivramam@gmail.com</a></li>
@@ -53,169 +59,305 @@
       <li><a href="https://www.linkedin.com/in/abishekshivram">LinkedIn</a></li>
       <li><a href="https://github.com/abishekshivram">GitHub</a></li>
     </ul>
-  </header>
+  </div>
 
-  <main>
+  <figure class="die-figure">
+    <div class="die-wrap">
+      <svg class="die" viewBox="0 0 640 640" role="group" aria-label="Stylized chip floorplan of my work. Each block links to its details." xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="p-cells" width="12" height="10" patternUnits="userSpaceOnUse">
+            <rect class="pc-row" width="12" height="10"/>
+            <path class="pc-rail" d="M0 0.5H12M0 9.5H12"/>
+            <path class="pc-cell" d="M2 2.5V7.5M5 2.5V7.5M7.5 3V7M10 2.5V7.5"/>
+          </pattern>
+          <pattern id="p-sram" width="8" height="8" patternUnits="userSpaceOnUse">
+            <rect class="ps-bg" width="8" height="8"/>
+            <rect class="ps-bit" x="1.2" y="1.2" width="5.6" height="5.6"/>
+          </pattern>
+          <pattern id="p-analog" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+            <rect class="pa-bg" width="14" height="14"/>
+            <path class="pa-hatch" d="M0 0V14"/>
+          </pattern>
+          <pattern id="p-route" width="6" height="6" patternUnits="userSpaceOnUse">
+            <rect class="pr-bg" width="6" height="6"/>
+            <path class="pr-wire" d="M0 3H6"/>
+          </pattern>
+          <pattern id="p-routev" width="6" height="6" patternUnits="userSpaceOnUse">
+            <rect class="pr-bg" width="6" height="6"/>
+            <path class="pr-wire" d="M3 0V6"/>
+          </pattern>
+          <pattern id="p-substrate" width="4" height="4" patternUnits="userSpaceOnUse">
+            <rect class="sub-bg" width="4" height="4"/>
+            <circle class="sub-dot" cx="1" cy="1" r="0.5"/>
+          </pattern>
+          <radialGradient id="g-sheen" cx="0.3" cy="0.25" r="0.9">
+            <stop class="sheen-a" offset="0"/>
+            <stop class="sheen-b" offset="1"/>
+          </radialGradient>
+        </defs>
 
-    <section id="about">
-      <h2>About</h2>
-      <p class="about">I design arithmetic-heavy digital hardware at Texas Instruments: the DSP and calibration datapaths inside high-speed RF data converters, taken from architecture and RTL through bit-accurate modeling, verification, and post-silicon validation. I also build tools that automate this work. <code>dp_gen</code>, my Python-to-SystemVerilog compiler, fuses arithmetic chains into carry-save trees and generates bit-exact golden models for verification. My IIT Madras thesis was on in-memory compute, and I've taught computer architecture and RISC-V to 150+ undergraduates.</p>
-    </section>
+        <rect class="die-substrate" x="0" y="0" width="640" height="640"/>
+        <rect class="die-seal" x="14" y="14" width="612" height="612"/>
+        <rect class="die-seal die-seal-in" x="22" y="22" width="596" height="596"/>
+        <g class="die-pads" aria-hidden="true"></g>
+        <rect class="die-ring" x="88" y="88" width="464" height="464"/>
+        <rect class="die-ring die-ring-in" x="98" y="98" width="444" height="444"/>
+        <rect class="die-core" x="108" y="108" width="424" height="424" fill="url(#p-route)"/>
+        <g class="die-straps" aria-hidden="true"></g>
 
-    <section id="experience">
-      <h2>Experience</h2>
+        <a class="blk blk-analog" href="#work-cal" data-block="u1" aria-labelledby="lg-u1-n" aria-describedby="lg-u1-c">
+          <rect class="blk-fill" x="116" y="116" width="196" height="132" fill="url(#p-analog)"/>
+          <rect class="blk-edge" x="116" y="116" width="196" height="132"/>
+          <text class="blk-id" x="126" y="134">U1</text><text class="blk-name" x="126" y="238">ADC CAL</text>
+        </a>
+        <a class="blk blk-logic" href="#work-dsp" data-block="u2" aria-labelledby="lg-u2-n" aria-describedby="lg-u2-c">
+          <rect class="blk-fill" x="320" y="116" width="204" height="132" fill="url(#p-cells)"/>
+          <rect class="blk-edge" x="320" y="116" width="204" height="132"/>
+          <text class="blk-id" x="330" y="134">U2</text><text class="blk-name" x="330" y="238">DDC / DUC</text>
+        </a>
+        <a class="blk blk-logic blk-core" href="#work-dpgen" data-block="u3" aria-labelledby="lg-u3-n" aria-describedby="lg-u3-c">
+          <rect class="blk-fill" x="116" y="256" width="252" height="120" fill="url(#p-cells)"/>
+          <rect class="blk-edge" x="116" y="256" width="252" height="120"/>
+          <text class="blk-id" x="126" y="274">U3</text><text class="blk-name" x="126" y="366">dp_gen</text>
+        </a>
+        <a class="blk blk-logic" href="#work-verif" data-block="u4" aria-labelledby="lg-u4-n" aria-describedby="lg-u4-c">
+          <rect class="blk-fill" x="376" y="256" width="148" height="120" fill="url(#p-cells)"/>
+          <rect class="blk-edge" x="376" y="256" width="148" height="120"/>
+          <text class="blk-id" x="386" y="274">U4</text><text class="blk-name" x="386" y="366">VERIF</text>
+        </a>
+        <a class="blk blk-logic" href="#work-postsi" data-block="u5" aria-labelledby="lg-u5-n" aria-describedby="lg-u5-c">
+          <rect class="blk-fill" x="416" y="384" width="108" height="66" fill="url(#p-cells)"/>
+          <rect class="blk-edge" x="416" y="384" width="108" height="66"/>
+          <text class="blk-id" x="426" y="402">U5</text><text class="blk-name" x="426" y="440">JESD LAB</text>
+        </a>
+        <a class="blk blk-mem" href="#proj-imc" data-block="u6" aria-labelledby="lg-u6-n" aria-describedby="lg-u6-c">
+          <rect class="blk-fill" x="116" y="384" width="172" height="140" fill="url(#p-sram)"/>
+          <rect class="blk-edge" x="116" y="384" width="172" height="140"/>
+          <text class="blk-id blk-id-solid" x="126" y="402">U6</text><text class="blk-name blk-name-solid" x="126" y="514">IMC SRAM</text>
+        </a>
+        <a class="blk blk-logic" href="#proj-noc" data-block="u7" aria-labelledby="lg-u7-n" aria-describedby="lg-u7-c">
+          <rect class="blk-fill" x="296" y="384" width="112" height="140" fill="url(#p-routev)"/>
+          <rect class="blk-edge" x="296" y="384" width="112" height="140"/>
+          <text class="blk-id" x="306" y="402">U7</text><text class="blk-name" x="306" y="514">NoC</text>
+        </a>
+        <a class="blk blk-logic" href="#work-teaching" data-block="u8" aria-labelledby="lg-u8-n" aria-describedby="lg-u8-c">
+          <rect class="blk-fill" x="416" y="458" width="108" height="66" fill="url(#p-cells)"/>
+          <rect class="blk-edge" x="416" y="458" width="108" height="66"/>
+          <text class="blk-id" x="426" y="476">U8</text><text class="blk-name" x="426" y="514">RISC-V</text>
+        </a>
 
-      <article class="org">
-        <header class="org-head">
-          <h3>Texas Instruments</h3>
-          <span>Bengaluru, India</span>
-        </header>
-        <div class="roles">
-          <div class="role">
-            <div class="role-head">
-              <h4>Digital Design Engineer, High-Speed Converters</h4>
-              <span class="dates">Jul 2022 – Present</span>
-            </div>
-            <ul>
-              <li><strong>Datapath compiler.</strong> Architected and sole-authored <code>dp_gen</code>, a Python-to-SystemVerilog compiler that infers bit-widths, fuses arithmetic chains into truncated CSA trees across multi-phase clocks, and auto-derives bit-exact golden Python models for cocotb equivalence checking, collapsing days of hand-written DSP RTL into seconds.</li>
-              <li><strong>DSP architecture.</strong> Architected and implemented RTL for high-performance DSP modules, including digital down- and up-converters (DDC/DUC) for high-speed AFEs, with a novel hitless rate-switching mechanism that maintains absolute phase determinism relative to SYSREF.</li>
-              <li><strong>Modeling and verification.</strong> Developed Python bit-accurate models for SNR/SFDR analysis and used them to set up cocotb verification regressions. Ran synthesis-driven design-space exploration (PPA) to optimize retiming and pipelining.</li>
-              <li><strong>Calibration and error correction.</strong> Built and verified the digital error correction and background calibration subsystems for high-speed pipelined RF ADCs, driving closure across analog, mixed-signal verification, firmware, and lab teams. Hardened a space-grade variant for radiation tolerance with SEU-resilient calibration registers.</li>
-              <li><strong>Post-silicon validation.</strong> Led post-silicon validation for these modules, writing test cases that cover JESD protocols and devising black-box debug strategies to resolve functional issues with limited visibility.</li>
-              <li><strong>Mentoring.</strong> Mentored an intern building an agentic AI framework for DSP RTL development, covering spec-to-RTL generation, testcase generation with self-simulation, and lint fixes.</li>
-              <li><strong>Teaching.</strong> Designed and delivered workshops and lectures on computer architecture and RISC-V for 150+ sophomores over three years in the WISH program, including lab exercises that guide students to implement a RISC-V core in a week.</li>
-            </ul>
-          </div>
-          <div class="role">
-            <div class="role-head">
-              <h4>Digital Intern</h4>
-              <span class="dates">May 2021 – Jul 2021</span>
-            </div>
-            <ul>
-              <li>Designed and validated custom FPGA architectures with OpenFPGA's XML + VPR flow, auto-generating complete Verilog RTL to explore programmable hardware for high-speed AFE systems.</li>
-              <li>Built Python tooling for PPA-driven optimization that extracts LUT, routing, and area metrics, and integrated the OpenFPGA flow into internal projects, verified through RTL simulation and logic synthesis.</li>
-            </ul>
-          </div>
-        </div>
-      </article>
+        <rect class="die-glass" x="0" y="0" width="640" height="640" fill="url(#g-sheen)" aria-hidden="true"/>
 
-      <article class="org">
-        <header class="org-head">
-          <h3>Celerix Technologies</h3>
-          <span>Bengaluru, India</span>
-        </header>
-        <div class="roles">
-          <div class="role">
-            <div class="role-head">
-              <h4>FPGA Design &amp; Verification Intern</h4>
-              <span class="dates">Oct 2021 – Dec 2021</span>
-            </div>
-            <ul>
-              <li>Validated the functional correctness of high-performance FPGA-based trading SoC modules and their high-speed PCIe and TCP/IP protocol IP cores through simulation, functional verification, and debug.</li>
-            </ul>
-          </div>
-        </div>
-      </article>
+        <g class="pad-links">
+          <a class="pad-link" href="Abishekshivram_resume.pdf" aria-label="Resume (PDF)">
+            <rect class="pad-hit" x="190" y="24" width="88" height="52"/><rect class="pad pad-live" x="222" y="30" width="24" height="24"/><text class="pad-label" x="234" y="72">RESUME</text>
+          </a>
+          <a class="pad-link" href="mailto:abishekshivramam@gmail.com" aria-label="Email abishekshivramam@gmail.com">
+            <rect class="pad-hit" x="276" y="24" width="88" height="52"/><rect class="pad pad-live" x="308" y="30" width="24" height="24"/><text class="pad-label" x="320" y="72">EMAIL</text>
+          </a>
+          <a class="pad-link" href="mailto:abishekshivramam@gmail.com?subject=Phone%20number%20request" aria-haspopup="dialog" data-phone-request aria-label="Request phone number">
+            <rect class="pad-hit" x="362" y="24" width="88" height="52"/><rect class="pad pad-live" x="394" y="30" width="24" height="24"/><text class="pad-label" x="406" y="72">PHONE</text>
+          </a>
+          <a class="pad-link" href="https://www.linkedin.com/in/abishekshivram" aria-label="LinkedIn">
+            <rect class="pad-hit" x="190" y="564" width="88" height="52"/><rect class="pad pad-live" x="222" y="586" width="24" height="24"/><text class="pad-label" x="234" y="578">LINKEDIN</text>
+          </a>
+          <a class="pad-link" href="https://github.com/abishekshivram" aria-label="GitHub">
+            <rect class="pad-hit" x="362" y="564" width="88" height="52"/><rect class="pad pad-live" x="394" y="586" width="24" height="24"/><text class="pad-label" x="406" y="578">GITHUB</text>
+          </a>
+        </g>
 
-      <article class="org">
-        <header class="org-head">
-          <h3>XYMA Analytics</h3>
-          <span>IIT Madras incubated startup</span>
-        </header>
-        <div class="roles">
-          <div class="role">
-            <div class="role-head">
-              <h4>Embedded Systems Intern</h4>
-              <span class="dates">Jun 2020 – Oct 2020</span>
-            </div>
-            <ul>
-              <li>Developed an ultrasonic pulser-receiver PCB for nondestructive evaluation, with an STM32 MCU generating excitation pulses and capturing time-of-flight through the onboard ADC.</li>
-              <li>Implemented peak-tracking ToF algorithms to compute temperature from multi-peak signals, integrating DAQ, sensors, and SMPS into the full signal-processing flow.</li>
-            </ul>
-          </div>
-        </div>
-      </article>
-    </section>
+        <text class="die-mark" x="96" y="577" aria-hidden="true">AAM 2026</text>
+      </svg>
+    </div>
+    <div class="die-readout" aria-hidden="true">
+      <span class="ro-id">U*</span>
+      <span class="ro-text"><strong class="ro-name">Floorplan of my work</strong> <span class="ro-cap">Hover or tab to a block to inspect it. Click to jump to the details.</span></span>
+    </div>
+    <ol class="die-legend" aria-label="Floorplan blocks">
+      <li><a href="#work-cal" data-jump data-block="u1"><span class="lg-id">U1</span><span class="lg-name" id="lg-u1-n">ADC calibration</span><span class="lg-cap" id="lg-u1-c">Background calibration and digital error correction for high-speed pipelined RF ADCs, plus a radiation-tolerant space-grade variant.</span></a></li>
+      <li><a href="#work-dsp" data-jump data-block="u2"><span class="lg-id">U2</span><span class="lg-name" id="lg-u2-n">DDC/DUC signal processing</span><span class="lg-cap" id="lg-u2-c">Digital down- and up-converters for high-speed AFEs, with hitless rate switching that keeps absolute phase determinism relative to SYSREF.</span></a></li>
+      <li><a href="#work-dpgen" data-jump data-block="u3"><span class="lg-id">U3</span><span class="lg-name" id="lg-u3-n">dp_gen datapath compiler</span><span class="lg-cap" id="lg-u3-c">My Python-to-SystemVerilog compiler: infers bit-widths, fuses arithmetic chains into truncated CSA trees, and derives bit-exact golden models.</span></a></li>
+      <li><a href="#work-verif" data-jump data-block="u4"><span class="lg-id">U4</span><span class="lg-name" id="lg-u4-n">Modeling and verification</span><span class="lg-cap" id="lg-u4-c">Bit-accurate Python models for SNR/SFDR analysis, cocotb regressions, and synthesis-driven PPA exploration.</span></a></li>
+      <li><a href="#work-postsi" data-jump data-block="u5"><span class="lg-id">U5</span><span class="lg-name" id="lg-u5-n">Post-silicon validation</span><span class="lg-cap" id="lg-u5-c">Lab validation of these modules, with JESD protocol test cases and black-box debug under limited visibility.</span></a></li>
+      <li><a href="#proj-imc" data-jump data-block="u6"><span class="lg-id">U6</span><span class="lg-name" id="lg-u6-n">In-memory compute (thesis)</span><span class="lg-cap" id="lg-u6-c">B.Tech thesis: a 6-bit reference SAR ADC for an SRAM in-memory compute macro, and RL-driven transistor sizing.</span></a></li>
+      <li><a href="#proj-noc" data-jump data-block="u7"><span class="lg-id">U7</span><span class="lg-name" id="lg-u7-n">Network-on-chip generator</span><span class="lg-cap" id="lg-u7-c">A parameterizable two-level NoC in Bluespec SystemVerilog, generated from topology descriptions with cocotb testbenches.</span></a></li>
+      <li><a href="#work-teaching" data-jump data-block="u8"><span class="lg-id">U8</span><span class="lg-name" id="lg-u8-n">RISC-V teaching</span><span class="lg-cap" id="lg-u8-c">Computer architecture and RISC-V workshops for 150+ sophomores, with labs where students build a RISC-V core in a week.</span></a></li>
+    </ol>
+    <figcaption class="die-note">A stylized floorplan of my work, not a real chip layout.</figcaption>
+  </figure>
+</div>
 
-    <section id="projects">
-      <h2>Projects</h2>
-      <div class="projects">
+<main>
 
-        <article class="project featured">
-          <p class="context"><span>B.Tech thesis, IIT Madras</span><span>2022</span></p>
-          <h3>In-memory compute: reference SAR ADC and RL-driven sizing</h3>
-          <p>Designed a 6-bit reference SAR ADC that tracks PVT variation in the SRAM-based IMDACs of an in-memory compute macro, chosen for its area efficiency and accuracy. Built a Python and Spectre API framework that automates netlist generation, simulation scheduling, metric extraction, and iterative transistor sizing and bias tuning for column sense amplifiers, progressing from negative-feedback tuning to a Q-learning agent for faster, more stable convergence.</p>
-          <ul class="tags"><li>SAR ADC</li><li>Spectre</li><li>Python</li><li>Q-learning</li></ul>
-        </article>
+  <section id="about">
+    <h2><span class="sw sw-diff" aria-hidden="true"></span>About</h2>
+    <p class="about">I design arithmetic-heavy digital hardware at Texas Instruments: the DSP and calibration datapaths inside high-speed RF data converters, taken from architecture and RTL through bit-accurate modeling, verification, and post-silicon validation. I also build tools that automate this work. <code>dp_gen</code>, my Python-to-SystemVerilog compiler, fuses arithmetic chains into carry-save trees and generates bit-exact golden models for verification. My IIT Madras thesis was on in-memory compute, and I've taught computer architecture and RISC-V to 150+ undergraduates.</p>
+  </section>
 
-        <article class="project featured">
-          <p class="context"><span>CAD for VLSI course, IIT Madras</span><span>2021</span></p>
-          <h3>Network-on-Chip generator</h3>
-          <p>A parameterizable two-level NoC in Bluespec SystemVerilog with full-duplex links, multi-VC routing, configurable flit sizes, round-robin arbitration, VC-aware buffering, and per-link utilization tracking. Python tooling generates synthesizable BSV projects and cocotb testbenches from L1/L2 topology descriptions (chain, ring, mesh, torus, star), and a timestamping traffic generator measures end-to-end latency.</p>
-          <ul class="tags"><li>Bluespec SV</li><li>cocotb</li><li>Python</li></ul>
-          <a class="code" href="https://github.com/abishekshivram/cad_vlsi/tree/main/final_project">View source on GitHub</a>
-        </article>
+  <section id="experience">
+    <h2><span class="sw sw-m1" aria-hidden="true"></span>Experience</h2>
 
-        <article class="project">
-          <p class="context"><span>Embedded Memory Design course</span><span>2021</span></p>
-          <h3>8T-SRAM in-memory MAC engine</h3>
-          <p>A 14 MHz multiply-accumulate engine integrating 8T SRAM, a DAC, decoders, an offset-corrected ADC, and a cross-coupled sense amplifier, with saturation and linearity analysis under PVT variation.</p>
-          <ul class="tags"><li>LTSpice</li><li>Electric</li></ul>
-        </article>
-
-        <article class="project">
-          <p class="context"><span>Digital IC Design course</span><span>2020</span></p>
-          <h3>Pipelined carry-save multiplier</h3>
-          <p>A DRC/LVS-clean 8-bit signed carry-save multiplier. Compared critical-path delay across adder architectures and pipelined the design to raise the operating frequency from 2 GHz to 3.7 GHz.</p>
-          <ul class="tags"><li>Physical design</li><li>LTSpice</li><li>Electric</li></ul>
-        </article>
-
-        <article class="project">
-          <p class="context"><span>Mini project, Shakti processor</span><span>2021</span></p>
-          <h3>Secure subsystem for the Shakti processor</h3>
-          <p>Analyzed ARM TrustZone and other architectures to design a hardware-backed secure subsystem for the Shakti processor (RISE group), with world isolation, secure memory access control, and root-of-trust principles.</p>
-          <ul class="tags"><li>Computer architecture</li><li>Security</li></ul>
-        </article>
-
-        <article class="project">
-          <p class="context"><span>Centre for Innovation, IIT Madras</span><span>2020</span></p>
-          <h3>Reinforcement learning for games</h3>
-          <p>A Reconnaissance Blind Chess agent that uses Monte Carlo methods to play with imperfect information, plus Deep Q-Network benchmarks on Minesweeper.</p>
-          <ul class="tags"><li>TensorFlow</li><li>Monte Carlo</li><li>DQN</li></ul>
-        </article>
-
+    <div class="la" hidden>
+      <div class="la-head">
+        <span class="la-title">Career trace · since 2018</span>
+        <span class="la-read" aria-live="off">Move across the trace to read dates</span>
       </div>
-    </section>
+      <div class="la-scroll">
+        <div class="la-grid"></div>
+      </div>
+    </div>
 
-    <section id="skills">
-      <h2>Skills</h2>
-      <dl class="skills">
-        <div><dt>Languages</dt><dd>SystemVerilog, Verilog, Bluespec SystemVerilog, Python</dd></div>
-        <div><dt>Design</dt><dd>Arithmetic datapaths and CSA trees, DSP (DDC/DUC), pipelining and retiming, synthesis and PPA, ADC calibration and error correction, radiation-tolerant design</dd></div>
-        <div><dt>Verification</dt><dd>cocotb, bit-accurate golden models, SNR/SFDR analysis, post-silicon validation, JESD protocols</dd></div>
-        <div><dt>Architecture</dt><dd>In-memory compute, networks-on-chip, RISC-V and computer architecture</dd></div>
-        <div><dt>Tools</dt><dd>OpenFPGA/VPR, Spectre, LTSpice, Electric, TensorFlow</dd></div>
-        <div><dt>Also</dt><dd>Embedded systems (STM32), PCB design, reinforcement learning</dd></div>
-      </dl>
-    </section>
+    <article class="org">
+      <header class="org-head">
+        <h3>Texas Instruments</h3>
+        <span>Bengaluru, India</span>
+      </header>
+      <div class="role" id="role-ti" data-signal="TI_DESIGN" data-start="2022-07" data-label="Digital Design Engineer at Texas Instruments, since Jul 2022">
+        <div class="role-head">
+          <h4>Digital Design Engineer, High-Speed Converters</h4>
+          <span class="dates">Jul 2022 – Present</span>
+        </div>
+        <ul>
+          <li id="work-dpgen"><strong>Datapath compiler.</strong> Architected and sole-authored <code>dp_gen</code>, a Python-to-SystemVerilog compiler that infers bit-widths, fuses arithmetic chains into truncated CSA trees across multi-phase clocks, and auto-derives bit-exact golden Python models for cocotb equivalence checking, collapsing days of hand-written DSP RTL into seconds.</li>
+          <li id="work-dsp"><strong>DSP architecture.</strong> Architected and implemented RTL for high-performance DSP modules, including digital down- and up-converters (DDC/DUC) for high-speed AFEs, with a novel hitless rate-switching mechanism that maintains absolute phase determinism relative to SYSREF.</li>
+          <li id="work-verif"><strong>Modeling and verification.</strong> Developed Python bit-accurate models for SNR/SFDR analysis and used them to set up cocotb verification regressions. Ran synthesis-driven design-space exploration (PPA) to optimize retiming and pipelining.</li>
+          <li id="work-cal"><strong>Calibration and error correction.</strong> Built and verified the digital error correction and background calibration subsystems for high-speed pipelined RF ADCs, driving closure across analog, mixed-signal verification, firmware, and lab teams. Hardened a space-grade variant for radiation tolerance with SEU-resilient calibration registers.</li>
+          <li id="work-postsi"><strong>Post-silicon validation.</strong> Led post-silicon validation for these modules, writing test cases that cover JESD protocols and devising black-box debug strategies to resolve functional issues with limited visibility.</li>
+          <li><strong>Mentoring.</strong> Mentored an intern building an agentic AI framework for DSP RTL development, covering spec-to-RTL generation, testcase generation with self-simulation, and lint fixes.</li>
+          <li id="work-teaching"><strong>Teaching.</strong> Designed and delivered workshops and lectures on computer architecture and RISC-V for 150+ sophomores over three years in the WISH program, including lab exercises that guide students to implement a RISC-V core in a week.</li>
+        </ul>
+      </div>
+      <div class="role" id="role-ti-intern" data-signal="TI_INTERN" data-start="2021-05" data-end="2021-07" data-label="Digital Intern at Texas Instruments, May 2021 to Jul 2021">
+        <div class="role-head">
+          <h4>Digital Intern</h4>
+          <span class="dates">May 2021 – Jul 2021</span>
+        </div>
+        <ul>
+          <li>Designed and validated custom FPGA architectures with OpenFPGA's XML + VPR flow, auto-generating complete Verilog RTL to explore programmable hardware for high-speed AFE systems.</li>
+          <li>Built Python tooling for PPA-driven optimization that extracts LUT, routing, and area metrics, and integrated the OpenFPGA flow into internal projects, verified through RTL simulation and logic synthesis.</li>
+        </ul>
+      </div>
+    </article>
 
-    <section id="education">
-      <h2>Education</h2>
-      <article class="org">
-        <header class="org-head">
-          <h3>Indian Institute of Technology Madras</h3>
-          <span>Chennai, India</span>
-        </header>
-        <div class="role-head degree">
-          <p>B.Tech (Hons) in Electrical Engineering, minor in Computing</p>
+    <article class="org">
+      <header class="org-head">
+        <h3>Celerix Technologies</h3>
+        <span>Bengaluru, India</span>
+      </header>
+      <div class="role" id="role-celerix" data-signal="CELERIX" data-start="2021-10" data-end="2021-12" data-label="FPGA Design and Verification Intern at Celerix Technologies, Oct 2021 to Dec 2021">
+        <div class="role-head">
+          <h4>FPGA Design &amp; Verification Intern</h4>
+          <span class="dates">Oct 2021 – Dec 2021</span>
+        </div>
+        <ul>
+          <li>Validated the functional correctness of high-performance FPGA-based trading SoC modules and their high-speed PCIe and TCP/IP protocol IP cores through simulation, functional verification, and debug.</li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="org">
+      <header class="org-head">
+        <h3>XYMA Analytics</h3>
+        <span>IIT Madras incubated startup</span>
+      </header>
+      <div class="role" id="role-xyma" data-signal="XYMA" data-start="2020-06" data-end="2020-10" data-label="Embedded Systems Intern at XYMA Analytics, Jun 2020 to Oct 2020">
+        <div class="role-head">
+          <h4>Embedded Systems Intern</h4>
+          <span class="dates">Jun 2020 – Oct 2020</span>
+        </div>
+        <ul>
+          <li>Developed an ultrasonic pulser-receiver PCB for nondestructive evaluation, with an STM32 MCU generating excitation pulses and capturing time-of-flight through the onboard ADC.</li>
+          <li>Implemented peak-tracking ToF algorithms to compute temperature from multi-peak signals, integrating DAQ, sensors, and SMPS into the full signal-processing flow.</li>
+        </ul>
+      </div>
+    </article>
+  </section>
+
+  <section id="projects">
+    <h2><span class="sw sw-m2" aria-hidden="true"></span>Projects</h2>
+    <div class="projects">
+
+      <article class="project featured" id="proj-imc">
+        <p class="context"><span>B.Tech thesis, IIT Madras</span><span>2022</span></p>
+        <h3>In-memory compute: reference SAR ADC and RL-driven sizing</h3>
+        <p>Designed a 6-bit reference SAR ADC that tracks PVT variation in the SRAM-based IMDACs of an in-memory compute macro, chosen for its area efficiency and accuracy. Built a Python and Spectre API framework that automates netlist generation, simulation scheduling, metric extraction, and iterative transistor sizing and bias tuning for column sense amplifiers, progressing from negative-feedback tuning to a Q-learning agent for faster, more stable convergence.</p>
+        <ul class="tags"><li>SAR ADC</li><li>Spectre</li><li>Python</li><li>Q-learning</li></ul>
+      </article>
+
+      <article class="project featured" id="proj-noc">
+        <p class="context"><span>CAD for VLSI course, IIT Madras</span><span>2021</span></p>
+        <h3>Network-on-Chip generator</h3>
+        <p>A parameterizable two-level NoC in Bluespec SystemVerilog with full-duplex links, multi-VC routing, configurable flit sizes, round-robin arbitration, VC-aware buffering, and per-link utilization tracking. Python tooling generates synthesizable BSV projects and cocotb testbenches from L1/L2 topology descriptions (chain, ring, mesh, torus, star), and a timestamping traffic generator measures end-to-end latency.</p>
+        <ul class="tags"><li>Bluespec SV</li><li>cocotb</li><li>Python</li></ul>
+        <a class="code" href="https://github.com/abishekshivram/cad_vlsi/tree/main/final_project">View source on GitHub</a>
+      </article>
+
+      <article class="project">
+        <p class="context"><span>Embedded Memory Design course</span><span>2021</span></p>
+        <h3>8T-SRAM in-memory MAC engine</h3>
+        <p>A 14 MHz multiply-accumulate engine integrating 8T SRAM, a DAC, decoders, an offset-corrected ADC, and a cross-coupled sense amplifier, with saturation and linearity analysis under PVT variation.</p>
+        <ul class="tags"><li>LTSpice</li><li>Electric</li></ul>
+      </article>
+
+      <article class="project">
+        <p class="context"><span>Digital IC Design course</span><span>2020</span></p>
+        <h3>Pipelined carry-save multiplier</h3>
+        <p>A DRC/LVS-clean 8-bit signed carry-save multiplier. Compared critical-path delay across adder architectures and pipelined the design to raise the operating frequency from 2 GHz to 3.7 GHz.</p>
+        <ul class="tags"><li>Physical design</li><li>LTSpice</li><li>Electric</li></ul>
+      </article>
+
+      <article class="project">
+        <p class="context"><span>Mini project, Shakti processor</span><span>2021</span></p>
+        <h3>Secure subsystem for the Shakti processor</h3>
+        <p>Analyzed ARM TrustZone and other architectures to design a hardware-backed secure subsystem for the Shakti processor (RISE group), with world isolation, secure memory access control, and root-of-trust principles.</p>
+        <ul class="tags"><li>Computer architecture</li><li>Security</li></ul>
+      </article>
+
+      <article class="project">
+        <p class="context"><span>Centre for Innovation, IIT Madras</span><span>2020</span></p>
+        <h3>Reinforcement learning for games</h3>
+        <p>A Reconnaissance Blind Chess agent that uses Monte Carlo methods to play with imperfect information, plus Deep Q-Network benchmarks on Minesweeper.</p>
+        <ul class="tags"><li>TensorFlow</li><li>Monte Carlo</li><li>DQN</li></ul>
+      </article>
+
+    </div>
+  </section>
+
+  <section id="skills">
+    <h2><span class="sw sw-poly" aria-hidden="true"></span>Skills</h2>
+    <dl class="skills">
+      <div><dt>Languages</dt><dd>SystemVerilog, Verilog, Bluespec SystemVerilog, Python</dd></div>
+      <div><dt>Design</dt><dd>Arithmetic datapaths and CSA trees, DSP (DDC/DUC), pipelining and retiming, synthesis and PPA, ADC calibration and error correction, radiation-tolerant design</dd></div>
+      <div><dt>Verification</dt><dd>cocotb, bit-accurate golden models, SNR/SFDR analysis, post-silicon validation, JESD protocols</dd></div>
+      <div><dt>Architecture</dt><dd>In-memory compute, networks-on-chip, RISC-V and computer architecture</dd></div>
+      <div><dt>Tools</dt><dd>OpenFPGA/VPR, Spectre, LTSpice, Electric, TensorFlow</dd></div>
+      <div><dt>Also</dt><dd>Embedded systems (STM32), PCB design, reinforcement learning</dd></div>
+    </dl>
+  </section>
+
+  <section id="education">
+    <h2><span class="sw sw-m3" aria-hidden="true"></span>Education</h2>
+    <article class="org">
+      <header class="org-head">
+        <h3>Indian Institute of Technology Madras</h3>
+        <span>Chennai, India</span>
+      </header>
+      <div class="role" id="role-iitm" data-signal="IIT_MADRAS" data-start="2018-07" data-end="2022-05" data-label="B.Tech at IIT Madras, 2018 to 2022">
+        <div class="role-head">
+          <h4>B.Tech (Hons) in Electrical Engineering, minor in Computing</h4>
           <span class="dates">2018 – 2022</span>
         </div>
         <p class="gpa">GPA 9.49 / 10</p>
-      </article>
-    </section>
+      </div>
+    </article>
+  </section>
 
-  </main>
-</div>
+  <footer class="site-foot">
+    <p>Abishekshivram A M · Bengaluru, India</p>
+    <p><a href="Abishekshivram_resume.pdf">Resume (PDF)</a> · <a href="https://github.com/abishekshivram">GitHub</a> · <a href="https://www.linkedin.com/in/abishekshivram">LinkedIn</a></p>
+  </footer>
+
+</main>
 
 <dialog class="modal" id="phone-dialog" aria-labelledby="phone-title">
   <div class="modal-body">
