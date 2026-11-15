@@ -3,6 +3,7 @@ const EMAIL = 'abishekshivramam@gmail.com';
 
 const root = document.documentElement;
 const prefersDark = matchMedia('(prefers-color-scheme: dark)');
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const themeToggle = document.querySelector('.theme-toggle');
 
 function systemTheme() {
@@ -33,8 +34,7 @@ function setTheme(theme) {
 
 themeToggle.addEventListener('click', () => {
   const next = currentTheme() === 'dark' ? 'light' : 'dark';
-  const animate = document.startViewTransition && !matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (animate) document.startViewTransition(() => setTheme(next));
+  if (document.startViewTransition && !reducedMotion.matches) document.startViewTransition(() => setTheme(next));
   else setTheme(next);
 });
 prefersDark.addEventListener('change', syncThemeToggle);
@@ -45,10 +45,12 @@ const phoneForm = phoneDialog.querySelector('form');
 const formStatus = phoneDialog.querySelector('.form-status');
 const submitButton = phoneForm.querySelector('[type="submit"]');
 
-document.querySelector('[data-phone-request]').addEventListener('click', event => {
-  event.preventDefault();
-  phoneDialog.showModal();
-});
+for (const trigger of document.querySelectorAll('[data-phone-request]')) {
+  trigger.addEventListener('click', event => {
+    event.preventDefault();
+    phoneDialog.showModal();
+  });
+}
 phoneDialog.querySelector('[data-close]').addEventListener('click', () => phoneDialog.close());
 phoneDialog.addEventListener('close', () => formStatus.replaceChildren());
 
@@ -81,3 +83,64 @@ phoneForm.addEventListener('submit', async event => {
     submitButton.disabled = false;
   }
 });
+
+// Whole years since a YYYY-MM start, so tenure figures never go stale.
+for (const el of document.querySelectorAll('[data-years-since]')) {
+  const [year, month] = el.dataset.yearsSince.split('-').map(Number);
+  const now = new Date();
+  const months = (now.getFullYear() - year) * 12 + (now.getMonth() + 1 - month);
+  if (months >= 12) el.textContent = String(Math.floor(months / 12));
+}
+
+const tocLinks = [...document.querySelectorAll('.toc ol a')];
+const sections = tocLinks.map(link => document.querySelector(link.hash)).filter(Boolean);
+
+// A section the reader just jumped to stays marked until they scroll on their own,
+// even when the next section is short and also near the top of the window.
+let pinned = null;
+
+function setCurrent(id) {
+  for (const link of tocLinks) {
+    if (link.hash === `#${id}`) link.setAttribute('aria-current', 'true');
+    else link.removeAttribute('aria-current');
+  }
+}
+
+function markCurrentSection() {
+  if (pinned) return setCurrent(pinned);
+  const line = innerHeight * 0.3;
+  let current = sections[0];
+  for (const section of sections) {
+    if (section.getBoundingClientRect().top <= line) current = section;
+  }
+  setCurrent(current.id);
+}
+
+for (const link of tocLinks) {
+  link.addEventListener('click', () => {
+    pinned = link.hash.slice(1);
+    setCurrent(pinned);
+  });
+}
+for (const type of ['wheel', 'touchstart', 'keydown']) {
+  addEventListener(type, () => { pinned = null; }, { passive: true });
+}
+
+let frame = 0;
+addEventListener('scroll', () => {
+  if (!frame) frame = requestAnimationFrame(() => { frame = 0; markCurrentSection(); });
+}, { passive: true });
+addEventListener('resize', markCurrentSection);
+markCurrentSection();
+
+// Pins in the package drawing light up their row in the pin table, and vice versa.
+for (const pin of document.querySelectorAll('[data-pin]')) {
+  const name = pin.dataset.pin;
+  const peers = document.querySelectorAll(`[data-pin="${name}"]`);
+  const on = () => peers.forEach(el => el.classList.add('is-lit'));
+  const off = () => peers.forEach(el => el.classList.remove('is-lit'));
+  pin.addEventListener('pointerenter', on);
+  pin.addEventListener('pointerleave', off);
+  pin.addEventListener('focusin', on);
+  pin.addEventListener('focusout', off);
+}
