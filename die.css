@@ -174,9 +174,7 @@
 /* Readout and legend */
 
 .die-readout {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
+  display: grid;
   min-height: 3.3em;
   padding: 10px 14px;
   border: 1px solid var(--line);
@@ -189,6 +187,11 @@
 }
 
 .die-readout.is-active { border-left-color: var(--accent); }
+
+/* Every caption sits in the same grid cell, the hidden ones only taking up space,
+   so the box is always as tall as its longest caption and hovering never moves the page. */
+.ro-row { grid-area: 1 / 1; display: flex; align-items: baseline; gap: 12px; }
+.ro-sizer { visibility: hidden; }
 
 .ro-id {
   flex: none;
@@ -238,7 +241,9 @@
   .js .die-readout { display: none; }
   .js .die-legend { display: grid; gap: 2px; }
   /* The legend has no entry for the chip art, so a tap on it brings the readout back. */
-  .js .die-readout.is-art { display: flex; }
+  .js .die-readout.is-art { display: grid; }
+  /* Here the readout only ever shows the chip art, so it can fit that caption alone. */
+  .ro-sizer { display: none; }
 }
 
 @media (min-width: 1024px) {

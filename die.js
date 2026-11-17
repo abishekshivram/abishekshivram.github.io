@@ -73,6 +73,17 @@ if (die) {
     return item && { id: item.querySelector('.lg-id').textContent, name: item.querySelector('.lg-name').textContent, cap: item.querySelector('.lg-cap').textContent };
   }
 
+  // Lay out every caption, hidden, under the live one so the readout keeps one height (see .ro-sizer).
+  const liveRow = readout.querySelector('.ro-row');
+  for (const info of [idle, ...legendLinks.map(a => describe(a.dataset.block)), describe('art')]) {
+    const sizer = liveRow.cloneNode(true);
+    sizer.classList.add('ro-sizer');
+    sizer.querySelector('.ro-id').textContent = info.id;
+    sizer.querySelector('.ro-name').textContent = info.name;
+    sizer.querySelector('.ro-cap').textContent = info.cap;
+    readout.append(sizer);
+  }
+
   function show(blockId) {
     const info = describe(blockId) ?? idle;
     for (const el of document.querySelectorAll('[data-block]')) el.classList.toggle('is-active', el.dataset.block === blockId);
