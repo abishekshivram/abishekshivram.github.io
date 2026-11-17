@@ -42,6 +42,18 @@ function flash(target) {
   else target.addEventListener('animationend', clear, { once: true });
 }
 
+// Scrolls to an in-page target, highlights it and moves focus there. Returns false if there is no such target.
+function jumpTo(hash) {
+  const target = document.querySelector(hash);
+  if (!target) return false;
+  history.pushState(null, '', hash);
+  target.scrollIntoView({ block: 'center', behavior: reducedMotion.matches ? 'instant' : 'smooth' });
+  flash(target);
+  target.setAttribute('tabindex', '-1');
+  target.focus({ preventScroll: true });
+  return true;
+}
+
 const die = document.querySelector('.die');
 if (die) {
   drawPads(die.querySelector('.die-pads'));
@@ -53,38 +65,118 @@ if (die) {
   const roCap = readout.querySelector('.ro-cap');
   const idle = { id: roId.textContent, name: roName.textContent, cap: roCap.textContent };
   const legendLinks = [...document.querySelectorAll('.die-legend a')];
+  const art = die.querySelector('.chip-art');
 
-  function show(blockId) {
+  function describe(blockId) {
+    if (blockId === 'art') return { id: 'ART', name: art.dataset.name, cap: art.dataset.cap };
     const item = legendLinks.find(a => a.dataset.block === blockId);
-    for (const el of document.querySelectorAll('[data-block]')) el.classList.toggle('is-active', el.dataset.block === blockId);
-    if (!item) {
-      roId.textContent = idle.id;
-      roName.textContent = idle.name;
-      roCap.textContent = idle.cap;
-      readout.classList.remove('is-active');
-      return;
-    }
-    roId.textContent = item.querySelector('.lg-id').textContent;
-    roName.textContent = item.querySelector('.lg-name').textContent;
-    roCap.textContent = item.querySelector('.lg-cap').textContent;
-    readout.classList.add('is-active');
+    return item && { id: item.querySelector('.lg-id').textContent, name: item.querySelector('.lg-name').textContent, cap: item.querySelector('.lg-cap').textContent };
   }
 
+  function show(blockId) {
+    const info = describe(blockId) ?? idle;
+    for (const el of document.querySelectorAll('[data-block]')) el.classList.toggle('is-active', el.dataset.block === blockId);
+    roId.textContent = info.id;
+    roName.textContent = info.name;
+    roCap.textContent = info.cap;
+    readout.classList.toggle('is-active', info !== idle);
+    // Phones show the legend instead of the readout, but the legend has no entry for the chip art.
+    readout.classList.toggle('is-art', blockId === 'art');
+  }
+
+  // On touch there is no hover, so the first tap on the chip art opens the loupe and a second tap follows its link.
+  let tapType = 'mouse';
+  let pinned = false;
+  art.addEventListener('pointerdown', event => { tapType = event.pointerType; });
+  art.addEventListener('keydown', () => { tapType = 'keyboard'; });
+  document.addEventListener('pointerdown', event => {
+    if (pinned && !art.contains(event.target)) {
+      pinned = false;
+      show(null);
+    }
+  });
+
   for (const el of document.querySelectorAll('.die [data-block], .die-legend [data-block]')) {
-    el.addEventListener('pointerenter', () => show(el.dataset.block));
-    el.addEventListener('pointerleave', () => show(null));
+    el.addEventListener('pointerenter', event => { if (event.pointerType !== 'touch') show(el.dataset.block); });
+    el.addEventListener('pointerleave', event => { if (event.pointerType !== 'touch' && !pinned) show(null); });
     el.addEventListener('focus', () => show(el.dataset.block));
-    el.addEventListener('blur', () => show(null));
-    el.addEventListener('click', event => {
-      const target = document.querySelector(el.getAttribute('href'));
-      if (!target) return;
-      event.preventDefault();
-      history.pushState(null, '', el.getAttribute('href'));
-      target.scrollIntoView({ block: 'center', behavior: reducedMotion.matches ? 'instant' : 'smooth' });
-      flash(target);
-      target.setAttribute('tabindex', '-1');
-      target.focus({ preventScroll: true });
+    el.addEventListener('blur', () => {
+      pinned = false;
+      show(null);
     });
+    el.addEventListener('click', event => {
+      if (el === art && tapType === 'touch' && !pinned) {
+        event.preventDefault();
+        pinned = true;
+        show('art');
+        return;
+      }
+      if (jumpTo(el.getAttribute('href'))) event.preventDefault();
+    });
+  }
+
+  // Mini floorplan that follows the page once the big die scrolls away, lighting the block being read.
+  const minimap = document.querySelector('.minimap');
+  if (minimap) {
+    const map = minimap.querySelector('.mm-map');
+    const mini = minimap.querySelector('.mm-die');
+    const sectionLabel = minimap.querySelector('.mm-section');
+    const blockLabel = minimap.querySelector('.mm-block');
+    const topbar = document.querySelector('.topbar');
+    const hero = document.querySelector('.hero');
+    const sections = [...document.querySelectorAll('main > section')];
+
+    mini.append(svgEl('rect', { class: 'mm-sub', width: 640, height: 640, rx: 14 }));
+    for (const pad of die.querySelectorAll('.pad')) {
+      mini.append(svgEl('rect', { class: 'mm-pad', x: pad.getAttribute('x'), y: pad.getAttribute('y'), width: 24, height: 24 }));
+    }
+    mini.append(svgEl('rect', { class: 'mm-ring', x: 88, y: 88, width: 464, height: 464 }));
+    const blocks = [...die.querySelectorAll('.blk')].map(blk => {
+      const edge = blk.querySelector('.blk-edge');
+      const info = describe(blk.dataset.block);
+      const label = `${info.id} ${info.name}`;
+      const href = blk.getAttribute('href');
+      const link = svgEl('a', { class: ['mm-blk', ...[...blk.classList].filter(c => c !== 'blk')].join(' '), href, 'aria-label': label });
+      link.append(svgEl('rect', Object.fromEntries(['x', 'y', 'width', 'height'].map(k => [k, edge.getAttribute(k)]))));
+      link.addEventListener('click', event => { if (jumpTo(href)) event.preventDefault(); });
+      // Pointing at a mini block names it; leaving goes back to naming the block being read.
+      for (const type of ['pointerenter', 'focus']) link.addEventListener(type, () => { blockLabel.textContent = label; });
+      for (const type of ['pointerleave', 'blur']) link.addEventListener(type, () => schedule());
+      mini.append(link);
+      return { link, label, target: document.querySelector(href) };
+    });
+
+    // Below 1260px the navigator is a single link back to the floorplan, so its blocks step out of the way.
+    const wide = matchMedia('(min-width: 1260px)');
+    const syncWide = () => { map.inert = !wide.matches; };
+    wide.addEventListener('change', syncWide);
+    syncWide();
+
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const top = topbar.getBoundingClientRect().bottom;
+      const on = hero.getBoundingClientRect().bottom < top;
+      minimap.classList.toggle('is-on', on);
+      document.documentElement.classList.toggle('mm-on', on);
+      // The reading line sits mid-screen, where jumps from the floorplan land.
+      const line = (top + innerHeight) / 2;
+      const section = sections.findLast(s => s.getBoundingClientRect().top <= line);
+      let lit = null, nearest = 32;
+      for (const block of blocks) {
+        const r = block.target.getBoundingClientRect();
+        const gap = Math.max(r.top - line, line - r.bottom, 0);
+        if (gap < nearest) [lit, nearest] = [block, gap];
+      }
+      for (const block of blocks) block.link.classList.toggle('is-lit', block === lit);
+      sectionLabel.textContent = section ? section.querySelector('h2').textContent.trim() : 'Top';
+      blockLabel.textContent = lit ? lit.label : '';
+    };
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(update); };
+    addEventListener('scroll', schedule, { passive: true });
+    addEventListener('resize', schedule);
+    minimap.hidden = false;
+    update();
   }
 }
 

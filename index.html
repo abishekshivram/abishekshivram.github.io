@@ -94,6 +94,7 @@
             <rect class="sub-bg" width="4" height="4"/>
             <circle class="sub-dot" cx="1" cy="1" r="0.5"/>
           </pattern>
+          <clipPath id="loupe-clip"><circle cx="450" cy="436" r="104"/></clipPath>
           <radialGradient id="g-sheen" cx="0.3" cy="0.25" r="0.9">
             <stop class="sheen-a" offset="0"/>
             <stop class="sheen-b" offset="1"/>
@@ -171,6 +172,31 @@
         </g>
 
         <text class="die-mark" x="96" y="577" aria-hidden="true">AAM 2026</text>
+
+        <a class="chip-art" href="#role-iitm" data-block="art" aria-label="Chip art: a spotted deer from the IIT Madras campus. Go to my education." data-name="Chip art" data-cap="Chip designers sometimes hide tiny drawings in a die's metal layers. Mine is a spotted deer, a common sight on the IIT Madras campus where I studied.">
+          <rect class="art-hit" x="494" y="556" width="40" height="29"/>
+          <g class="art-ink">
+            <path transform="translate(505 560) scale(0.6)" d="M6 0H7V1H6ZM6 1V4H7V3H8V2H9V3H8V4H7V6H8V5H9V4H10V1H11V0H12V1H11V3H12V2H13V1H14V2H13V3H12V4H11V5H10V6H9V7H10V8H11V7H13V9H12V8H11V9H10V10H9V12H10V13H11V14H21V13H22V14H24V15H25V18H24V20H23V26H21V25H22V21H20V24H19V20H10V25H11V26H9V21H8V26H6V25H7V18H6V13H5V12H4V11H0V10H1V9H3V8H5V6H4V5H3V4H2V3H1V2H2V3H3V4H4V5H5V1ZM10 16H9V17H10ZM14 16H13V17H14ZM18 16H17V17H18ZM22 16H21V17H22ZM10 18H9V19H10ZM14 18H13V19H14ZM18 18H17V19H18ZM22 18H21V19H22ZM19 24V26H17V25H18V24Z"/>
+            <path transform="translate(504.6 577) scale(0.42)" d="M0 0H3V1H2V4H3V5H0V4H1V1H0ZM4 0H7V1H6V4H7V5H4V4H5V1H4ZM8 0H11V1H10V5H9V1H8ZM14 0H15V1H16V2H15V5H14ZM18 0H19V5H18V2H17V1H18ZM21 0H22V1H21ZM22 1H23V5H22V3H21V5H20V1H21V2H22ZM24 0H26V1H25V4H26V1H27V4H26V5H24ZM28 0H30V1H29V2H30V1H31V2H30V3H29V5H28ZM33 0H34V1H33ZM34 1H35V5H34V3H33V5H32V1H33V2H34ZM37 0H39V1H37ZM37 1V2H36V1ZM16 2H17V3H16ZM37 2H38V3H37ZM30 3H31V5H30ZM38 3H39V4H38ZM38 4V5H36V4Z"/>
+          </g>
+        </a>
+        <g class="loupe" aria-hidden="true">
+          <path class="loupe-lines" d="M526.5 572.7L551.6 458.3M506.4 582.1L402.3 528.4"/>
+          <circle class="loupe-spot" cx="512.8" cy="569.6" r="14"/>
+          <circle class="loupe-shadow" cx="453" cy="442" r="105"/>
+          <circle class="loupe-lens" cx="450" cy="436" r="104"/>
+          <g clip-path="url(#loupe-clip)">
+            <g transform="translate(450 436) scale(7) translate(-512.8 -569.6)">
+              <rect x="490" y="550" width="46" height="40" fill="url(#p-substrate)"/>
+              <g class="loupe-ink">
+            <path transform="translate(505 560) scale(0.6)" d="M6 0H7V1H6ZM6 1V4H7V3H8V2H9V3H8V4H7V6H8V5H9V4H10V1H11V0H12V1H11V3H12V2H13V1H14V2H13V3H12V4H11V5H10V6H9V7H10V8H11V7H13V9H12V8H11V9H10V10H9V12H10V13H11V14H21V13H22V14H24V15H25V18H24V20H23V26H21V25H22V21H20V24H19V20H10V25H11V26H9V21H8V26H6V25H7V18H6V13H5V12H4V11H0V10H1V9H3V8H5V6H4V5H3V4H2V3H1V2H2V3H3V4H4V5H5V1ZM10 16H9V17H10ZM14 16H13V17H14ZM18 16H17V17H18ZM22 16H21V17H22ZM10 18H9V19H10ZM14 18H13V19H14ZM18 18H17V19H18ZM22 18H21V19H22ZM19 24V26H17V25H18V24Z"/>
+            <path transform="translate(504.6 577) scale(0.42)" d="M0 0H3V1H2V4H3V5H0V4H1V1H0ZM4 0H7V1H6V4H7V5H4V4H5V1H4ZM8 0H11V1H10V5H9V1H8ZM14 0H15V1H16V2H15V5H14ZM18 0H19V5H18V2H17V1H18ZM21 0H22V1H21ZM22 1H23V5H22V3H21V5H20V1H21V2H22ZM24 0H26V1H25V4H26V1H27V4H26V5H24ZM28 0H30V1H29V2H30V1H31V2H30V3H29V5H28ZM33 0H34V1H33ZM34 1H35V5H34V3H33V5H32V1H33V2H34ZM37 0H39V1H37ZM37 1V2H36V1ZM16 2H17V3H16ZM37 2H38V3H37ZM30 3H31V5H30ZM38 3H39V4H38ZM38 4V5H36V4Z"/>
+              </g>
+            </g>
+          </g>
+          <circle class="loupe-rim" cx="450" cy="436" r="104"/>
+          <text class="loupe-label" x="450" y="526">CHIP ART · 7×</text>
+        </g>
       </svg>
     </div>
     <div class="die-readout" aria-hidden="true">
@@ -187,7 +213,7 @@
       <li><a href="#proj-noc" data-jump data-block="u7"><span class="lg-id">U7</span><span class="lg-name" id="lg-u7-n">Network-on-chip generator</span><span class="lg-cap" id="lg-u7-c">A parameterizable two-level NoC in Bluespec SystemVerilog, generated from topology descriptions with cocotb testbenches.</span></a></li>
       <li><a href="#work-teaching" data-jump data-block="u8"><span class="lg-id">U8</span><span class="lg-name" id="lg-u8-n">RISC-V teaching</span><span class="lg-cap" id="lg-u8-c">Computer architecture and RISC-V workshops for 150+ sophomores, with labs where students build a RISC-V core in a week.</span></a></li>
     </ol>
-    <figcaption class="die-note">A stylized floorplan of my work, not a real chip layout.</figcaption>
+    <figcaption class="die-note">A stylized floorplan of my work, not a real chip layout. Like some real chips, it hides a tiny drawing.</figcaption>
   </figure>
 </div>
 
@@ -362,6 +388,12 @@
   </footer>
 
 </main>
+
+<nav class="minimap" aria-label="Floorplan navigator" hidden>
+  <div class="mm-map"><svg class="mm-die" viewBox="0 0 640 640" role="group" aria-label="Mini floorplan"></svg></div>
+  <p class="mm-where"><span class="mm-section"></span><span class="mm-block"></span></p>
+  <a class="mm-top" href="#top"><span>Back to floorplan</span></a>
+</nav>
 
 <dialog class="modal" id="phone-dialog" aria-labelledby="phone-title">
   <div class="modal-body">

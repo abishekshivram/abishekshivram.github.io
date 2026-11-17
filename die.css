@@ -19,7 +19,8 @@
 
 .die { display: block; width: 100%; height: 100%; border-radius: 6px; }
 
-.die {
+.die,
+.minimap {
   --sub: light-dark(#f2f1ec, #101316);
   --sub-dot: light-dark(rgb(30 34 38 / 0.10), rgb(255 255 255 / 0.05));
   --seal: light-dark(#8a8f96, #6b5a3a);
@@ -34,6 +35,9 @@
   --label: light-dark(#2a2e33, #efe3c8);
   --sheen-a: light-dark(rgb(255 255 255 / 0), rgb(255 230 190 / 0.10));
   --sheen-b: light-dark(rgb(255 255 255 / 0), rgb(0 0 0 / 0.28));
+  --art: light-dark(color-mix(in srgb, var(--l-top) 42%, transparent), rgb(226 197 139 / 0.38));
+  --art-lit: light-dark(var(--l-top), #e2c58b);
+  --lens-rim: light-dark(#5f6670, #c9ad78);
 }
 
 .die-substrate { fill: url(#p-substrate); }
@@ -125,6 +129,48 @@
 .pad-link:focus-visible .pad-live { stroke: var(--accent); stroke-width: 3; }
 .pad-link:focus-visible .pad-hit { stroke: var(--accent); stroke-width: 2; stroke-dasharray: 4 3; }
 
+/* Chip art: a tiny deer in the top metal. A loupe magnifies it on hover, focus or a first tap. */
+
+.chip-art { cursor: zoom-in; outline: none; }
+.art-hit { fill: transparent; }
+.art-ink { fill: var(--art); transition: fill 0.15s; }
+.chip-art:is(:focus-visible, .is-active) .art-ink { fill: var(--art-lit); }
+.chip-art:focus-visible .art-hit { stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 3 2; }
+
+.loupe {
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.14);
+  transform-origin: 512.8px 569.6px;
+  transition: opacity 0.18s, transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.12), visibility 0s linear 0.3s;
+}
+
+.chip-art:is(:focus-visible, .is-active) + .loupe { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+
+/* Touch screens keep :hover after a tap, so only real pointers open the loupe on hover. */
+@media (hover: hover) {
+  .chip-art:hover .art-ink { fill: var(--art-lit); }
+  .chip-art:hover + .loupe { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+}
+
+.loupe-lines { fill: none; stroke: var(--lens-rim); stroke-width: 1; stroke-dasharray: 3 3; }
+.loupe-spot { fill: none; stroke: var(--lens-rim); stroke-width: 1.5; }
+.loupe-shadow { fill: rgb(0 0 0 / 0.3); }
+.loupe-lens { fill: var(--sub); }
+.loupe-ink { fill: var(--art-lit); }
+.loupe-rim { fill: none; stroke: var(--lens-rim); stroke-width: 4; }
+
+.loupe-label {
+  font: 700 8.5px var(--mono);
+  letter-spacing: 0.16em;
+  text-anchor: middle;
+  fill: var(--label);
+  paint-order: stroke;
+  stroke: var(--sub);
+  stroke-width: 3px;
+}
+
 /* Readout and legend */
 
 .die-readout {
@@ -191,6 +237,8 @@
   .die-figure { max-width: 520px; }
   .js .die-readout { display: none; }
   .js .die-legend { display: grid; gap: 2px; }
+  /* The legend has no entry for the chip art, so a tap on it brings the readout back. */
+  .js .die-readout.is-art { display: flex; }
 }
 
 @media (min-width: 1024px) {
@@ -255,3 +303,88 @@
 .la-now-label { font: 700 10px var(--mono); fill: var(--accent); letter-spacing: 0.1em; }
 .la-cursor { stroke: var(--text); stroke-width: 1; stroke-dasharray: 3 3; opacity: 0; pointer-events: none; }
 .la-cursor.is-on { opacity: 0.7; }
+
+/* Mini floorplan navigator (built by die.js). It appears once the hero scrolls away and lights the block being read.
+   Under 1260px it takes the logo's place in the top bar and links back to the floorplan.
+   Wider screens get a bigger copy in the right margin, where each block is a link. */
+
+.minimap {
+  position: fixed;
+  z-index: 11;
+  top: calc((var(--top-h) - 42px) / 2);
+  left: var(--gutter);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.9);
+  transform-origin: left center;
+  transition: opacity 0.2s, transform 0.2s, visibility 0s linear 0.2s;
+}
+
+.minimap[hidden] { display: none; }
+.minimap.is-on { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+
+.mm-map { flex: none; width: 42px; height: 42px; }
+.mm-die { display: block; width: 100%; height: 100%; overflow: visible; }
+.mm-sub { fill: var(--sub); stroke: var(--seal); stroke-width: 1.5px; vector-effect: non-scaling-stroke; }
+.mm-pad { display: none; fill: var(--pad); }
+.mm-ring { fill: none; stroke: var(--ring); stroke-width: 1.5px; vector-effect: non-scaling-stroke; }
+.mm-blk { outline: none; }
+.mm-blk rect { fill: color-mix(in srgb, var(--c) 20%, transparent); stroke: var(--c); stroke-width: 1px; vector-effect: non-scaling-stroke; transition: fill 0.2s; }
+.mm-blk.is-lit rect { fill: var(--c); }
+
+.mm-where {
+  display: grid;
+  min-width: 0;
+  max-width: calc(100vw - 2 * var(--gutter) - 110px);
+  font-family: var(--mono);
+  line-height: 1.3;
+}
+
+.mm-section { font-size: 0.64rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.mm-block { overflow: hidden; font-size: 0.76rem; font-weight: 700; white-space: nowrap; text-overflow: ellipsis; }
+.mm-block:empty { display: none; }
+
+.mm-top { font-family: var(--mono); font-size: 0.72rem; }
+
+@media (max-width: 1259px) {
+  /* The whole navigator is one link back to the floorplan; its label is for screen readers only. */
+  .mm-top { position: absolute; inset: -4px; border-radius: 8px; }
+  .mm-top span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .brand { transition: opacity 0.2s, visibility 0s; }
+  .mm-on .brand { opacity: 0; visibility: hidden; transition: opacity 0.2s, visibility 0s linear 0.2s; }
+}
+
+@media (min-width: 760px) and (max-width: 1023px) {
+  .mm-where { display: none; }
+}
+
+@media (min-width: 1024px) and (max-width: 1259px) {
+  .mm-where { max-width: calc(100vw - 660px); }
+}
+
+@media (min-width: 1260px) {
+  .minimap {
+    top: calc(var(--top-h) + 32px);
+    left: calc(50% + 482px);
+    width: 132px;
+    flex-direction: column;
+    align-items: stretch;
+    transform-origin: top center;
+  }
+  .mm-map { width: 132px; height: 132px; }
+  .mm-pad { display: inline; }
+  .mm-blk { cursor: pointer; }
+  .mm-blk:hover rect { fill: color-mix(in srgb, var(--c) 50%, transparent); }
+  .mm-blk.is-lit:hover rect { fill: var(--c); }
+  .mm-blk:focus-visible rect { stroke: var(--accent); stroke-width: 2px; stroke-dasharray: 3 2; }
+  .mm-where { max-width: none; padding: 0 2px; }
+  .mm-block { white-space: normal; }
+  .mm-top { justify-self: start; padding: 0 2px; }
+}
+
+@media print {
+  .minimap { display: none !important; }
+}
