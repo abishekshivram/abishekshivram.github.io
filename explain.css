@@ -1,0 +1,328 @@
+/* Zoom-in explainer (U2: DDC/DUC). The dialog grows out of the block it explains; explain.js draws the plot. */
+
+.ro-hint { color: var(--accent); font-weight: 600; }
+.ro-hint:empty { display: none; }
+
+/* Phones use the legend instead of the readout, so the legend carries the same cue. */
+.js .die-legend a[data-explain] .lg-name::after { content: " · zoom in"; color: var(--accent); font-size: 0.85em; }
+
+/* The page behind stays put while the explainer is open, without shifting by a scrollbar's width. */
+.ex-open { overflow: hidden; scrollbar-gutter: stable; }
+
+.explainer {
+  --want: var(--accent);
+  --bad: var(--l-poly);
+  width: min(1040px, calc(100vw - 32px));
+  max-width: none;
+  max-height: calc(100dvh - 32px);
+  padding: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--card);
+  color: var(--text);
+  box-shadow: 0 30px 80px rgb(0 0 0 / 0.35);
+}
+
+.explainer::backdrop {
+  background: rgb(8 10 12 / 0.55);
+  backdrop-filter: blur(2px);
+  animation: ex-fade 0.3s ease-out;
+}
+
+.explainer.is-closing::backdrop { opacity: 0; transition: opacity 0.28s; }
+
+@keyframes ex-fade { from { opacity: 0; } }
+
+.ex-body { padding: 26px 28px 28px; }
+
+.ex-head { position: relative; padding-right: 48px; }
+.ex-close { position: absolute; top: -6px; right: -8px; }
+
+.ex-kicker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: 700 0.72rem var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.ex-chip {
+  width: 12px;
+  height: 12px;
+  border: 1.5px solid var(--l-m1);
+  background: repeating-linear-gradient(0deg, var(--l-m1) 0 1px, transparent 1px 3px);
+}
+
+.ex-head h2 {
+  margin-top: 8px;
+  font-size: clamp(1.25rem, 2.6vw, 1.6rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.ex-lede { margin-top: 10px; max-width: 46em; color: var(--muted); font-size: 0.98rem; }
+
+.ex-main {
+  display: grid;
+  gap: 20px;
+  margin-top: 22px;
+}
+
+@media (min-width: 900px) {
+  .ex-main { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); align-items: start; }
+}
+
+/* Plot */
+
+.ex-figure {
+  padding: 12px 12px 6px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: light-dark(#fbfaf7, #101417);
+}
+
+.ex-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  margin-bottom: 6px;
+}
+
+.ex-small { font: 0.68rem var(--mono); color: var(--muted); }
+
+.ex-plot { display: block; width: 100%; height: auto; }
+
+.xp-title { font: 700 11px var(--mono); letter-spacing: 0.16em; fill: var(--muted); }
+.xp-rate { font: 700 12px var(--mono); fill: var(--text); text-anchor: end; font-variant-numeric: tabular-nums; }
+.xp-note { font: 11px var(--mono); fill: var(--muted); text-anchor: end; }
+.xp-grid { stroke: var(--line); stroke-width: 1; stroke-dasharray: 2 4; }
+.xp-zero { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 3 3; opacity: 0.7; }
+.xp-axis, .xp-mid { stroke: var(--muted); stroke-width: 1; opacity: 0.6; }
+.xp-tick { font: 11px var(--mono); fill: var(--muted); text-anchor: middle; font-variant-numeric: tabular-nums; }
+.xp-axis-title { font: 11px var(--mono); fill: var(--muted); text-anchor: middle; }
+
+.xp-floor { fill: none; stroke: var(--muted); stroke-width: 1; opacity: 0.45; }
+.xp-mask { fill: color-mix(in srgb, var(--want) 10%, transparent); stroke: var(--want); stroke-width: 1.5; stroke-dasharray: 5 4; }
+
+.xp-sig { stroke-width: 1.5; stroke-linejoin: round; }
+.xp-sig.is-want { fill: color-mix(in srgb, var(--want) 32%, transparent); stroke: var(--want); stroke-width: 2.5; }
+.xp-sig.is-other { fill: color-mix(in srgb, var(--l-m1) 22%, transparent); stroke: var(--l-m1); }
+.xp-sig.is-mirror { fill: color-mix(in srgb, var(--muted) 12%, transparent); stroke: var(--muted); stroke-dasharray: 4 3; }
+.xp-sig.is-image { fill: color-mix(in srgb, var(--bad) 18%, transparent); stroke: var(--bad); stroke-dasharray: 4 3; }
+.xp-sig.is-alias { fill: color-mix(in srgb, var(--bad) 30%, transparent); stroke: var(--bad); stroke-width: 2; }
+
+.xp-tag {
+  font: 700 11px var(--mono);
+  text-anchor: middle;
+  fill: var(--muted);
+  paint-order: stroke;
+  stroke: light-dark(#fbfaf7, #101417);
+  stroke-width: 4px;
+}
+
+.xp-tag.is-want { fill: var(--want); }
+.xp-tag.is-bad { fill: var(--bad); }
+.xp-send { text-anchor: end; }
+
+.xp-stem { stroke: var(--l-m1); stroke-width: 1.5; }
+.xp-dot { fill: var(--l-m1); }
+.xp-strip.is-want .xp-stem { stroke: var(--want); }
+.xp-strip.is-want .xp-dot { fill: var(--want); }
+.xp-strip.is-bad .xp-dot.is-kept { fill: var(--bad); }
+.xp-strip.is-bad .xp-stem { stroke: var(--bad); }
+.xp-wave { fill: none; stroke: var(--want); stroke-width: 1.5; stroke-dasharray: 3 3; }
+
+/* Signal chain: one box per step, joined by arrows, above the plot */
+
+.ex-chains { display: grid; margin: 4px 0 2px; }
+.ex-chain { grid-area: 1 / 1; display: flex; list-style: none; padding: 0; }
+.ex-chain.is-off { visibility: hidden; }
+.ex-chain li { display: flex; flex: 1; min-width: 0; align-items: center; }
+.ex-chain li + li::before { content: "→"; flex: none; padding: 0 3px; color: var(--muted); font: 0.8rem var(--mono); }
+
+.ex-step {
+  --p: 0;
+  position: relative;
+  display: grid;
+  justify-items: center;
+  flex: 1;
+  min-width: 0;
+  gap: 1px;
+  padding: 6px 4px 7px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--muted);
+  font: inherit;
+  cursor: pointer;
+}
+
+.ex-step:hover { color: var(--text); border-color: var(--muted); }
+.ex-step.is-done { color: var(--text); }
+
+.ex-step[aria-current] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+/* Autoplay progress runs along the bottom edge of the current step. */
+.ex-step[aria-current]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: calc(var(--p) * 100%);
+  background: var(--accent);
+}
+
+.ex-sym { font: 700 0.78rem var(--mono); white-space: nowrap; }
+.ex-step[aria-current] .ex-sym { color: var(--accent); }
+.ex-t { max-width: 100%; overflow: hidden; font-size: 0.72rem; white-space: nowrap; text-overflow: ellipsis; }
+
+/* Step text: all of it shares one grid cell, so the panel keeps one height as the steps change. */
+
+.ex-steps { display: grid; gap: 14px; min-width: 0; align-content: start; }
+.ex-says { display: grid; }
+.ex-say { grid-area: 1 / 1; visibility: hidden; font-size: 0.95rem; line-height: 1.65; }
+.ex-say.is-on { visibility: visible; }
+.ex-say strong { font-weight: 600; }
+
+.ex-inline {
+  display: inline;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.ex-inline[aria-pressed="true"] { color: var(--bad); }
+
+.ex-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.ex-nav { display: flex; gap: 6px; }
+
+.ex-btn {
+  padding: 7px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ex-btn:hover:not(:disabled) { border-color: var(--muted); }
+.ex-btn:disabled { opacity: 0.45; cursor: default; }
+.ex-btn-main { border-color: var(--accent); background: var(--accent); color: var(--accent-ink); }
+.ex-btn-main:hover:not(:disabled) { border-color: var(--accent); filter: brightness(1.1); }
+
+.ex-rate { display: flex; align-items: center; gap: 8px; font: 0.76rem var(--mono); color: var(--muted); }
+.ex-rate-label { min-width: 15ch; text-align: right; }
+.ex-tip { font: 0.72rem var(--mono); color: var(--muted); }
+
+@media (hover: none) {
+  .ex-tip { display: none; }
+}
+
+.ex-seg {
+  display: inline-flex;
+  padding: 2px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--card);
+}
+
+.ex-seg button {
+  padding: 5px 10px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--muted);
+  font: 600 0.78rem var(--mono);
+  cursor: pointer;
+}
+
+.ex-seg button:hover { color: var(--text); }
+.ex-seg button[aria-pressed="true"] { background: var(--accent-soft); color: var(--text); }
+
+.ex-live { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* Notes */
+
+.ex-notes { display: grid; gap: 14px; margin-top: 20px; }
+
+@media (min-width: 760px) {
+  .ex-notes { grid-template-columns: 1fr 1fr; }
+}
+
+.ex-card {
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.ex-card h3 {
+  font: 700 0.72rem var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.ex-card p { margin-top: 8px; font-size: 0.92rem; line-height: 1.6; }
+.ex-mine { border-left: 3px solid var(--l-m1); }
+.ex-mine a { display: inline-block; margin-top: 10px; font-size: 0.9rem; font-weight: 600; }
+
+@media (max-width: 599px) {
+  .explainer {
+    width: 100vw;
+    max-height: 100dvh;
+    height: 100dvh;
+    border: 0;
+    border-radius: 0;
+  }
+  .ex-body { padding: 20px 16px 28px; }
+  .ex-figure { margin: 0 -6px; padding: 10px 6px 4px; }
+  .ex-chain li + li::before { padding: 0 1px; }
+  .ex-step { padding: 5px 2px 6px; }
+  .ex-sym { font-size: 0.7rem; }
+  .ex-t { display: none; }
+  .ex-rate-label { min-width: 0; text-align: left; }
+}
+
+/* When the plot sits above the text, it stays pinned at the top so each step's text and its animation are seen together. */
+@media (max-width: 899px) and (min-height: 640px) {
+  .ex-figure {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    box-shadow: 0 8px 18px -12px rgb(0 0 0 / 0.35);
+  }
+}
+
+@media print {
+  .explainer { display: none !important; }
+}

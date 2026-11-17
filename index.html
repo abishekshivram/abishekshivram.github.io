@@ -22,8 +22,10 @@
 </script>
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="die.css">
+<link rel="stylesheet" href="explain.css">
 <script src="script.js" defer></script>
 <script src="die.js" defer></script>
+<script src="explain.js" defer></script>
 </head>
 <body>
 
@@ -115,7 +117,7 @@
           <rect class="blk-edge" x="116" y="116" width="196" height="132"/>
           <text class="blk-id" x="126" y="134">U1</text><text class="blk-name" x="126" y="238">ADC CAL</text>
         </a>
-        <a class="blk blk-logic" href="#work-dsp" data-block="u2" aria-labelledby="lg-u2-n" aria-describedby="lg-u2-c">
+        <a class="blk blk-logic" href="#work-dsp" data-block="u2" data-explain="u2" aria-labelledby="lg-u2-n" aria-describedby="lg-u2-c">
           <rect class="blk-fill" x="320" y="116" width="204" height="132" fill="url(#p-cells)"/>
           <rect class="blk-edge" x="320" y="116" width="204" height="132"/>
           <text class="blk-id" x="330" y="134">U2</text><text class="blk-name" x="330" y="238">DDC / DUC</text>
@@ -202,12 +204,12 @@
     <div class="die-readout" aria-hidden="true">
       <div class="ro-row">
         <span class="ro-id">U*</span>
-        <span class="ro-text"><strong class="ro-name">Floorplan of my work</strong> <span class="ro-cap">Hover or tab to a block to inspect it. Click to jump to the details.</span></span>
+        <span class="ro-text"><strong class="ro-name">Floorplan of my work</strong> <span class="ro-cap">Hover or tab to a block to inspect it. Click to jump to the details.</span> <span class="ro-hint"></span></span>
       </div>
     </div>
     <ol class="die-legend" aria-label="Floorplan blocks">
       <li><a href="#work-cal" data-jump data-block="u1"><span class="lg-id">U1</span><span class="lg-name" id="lg-u1-n">ADC calibration</span><span class="lg-cap" id="lg-u1-c">Background calibration and digital error correction for high-speed pipelined RF ADCs, plus a radiation-tolerant space-grade variant.</span></a></li>
-      <li><a href="#work-dsp" data-jump data-block="u2"><span class="lg-id">U2</span><span class="lg-name" id="lg-u2-n">DDC/DUC signal processing</span><span class="lg-cap" id="lg-u2-c">Digital down- and up-converters for high-speed AFEs, with hitless rate switching that keeps absolute phase determinism relative to SYSREF.</span></a></li>
+      <li><a href="#work-dsp" data-jump data-block="u2" data-explain="u2"><span class="lg-id">U2</span><span class="lg-name" id="lg-u2-n">DDC/DUC signal processing</span><span class="lg-cap" id="lg-u2-c">Digital down- and up-converters for high-speed AFEs, with hitless rate switching that keeps absolute phase determinism relative to SYSREF.</span></a></li>
       <li><a href="#work-dpgen" data-jump data-block="u3"><span class="lg-id">U3</span><span class="lg-name" id="lg-u3-n">dp_gen datapath compiler</span><span class="lg-cap" id="lg-u3-c">My Python-to-SystemVerilog compiler: infers bit-widths, fuses arithmetic chains into truncated CSA trees, and derives bit-exact golden models.</span></a></li>
       <li><a href="#work-verif" data-jump data-block="u4"><span class="lg-id">U4</span><span class="lg-name" id="lg-u4-n">Modeling and verification</span><span class="lg-cap" id="lg-u4-c">Bit-accurate Python models for SNR/SFDR analysis, cocotb regressions, and synthesis-driven PPA exploration.</span></a></li>
       <li><a href="#work-postsi" data-jump data-block="u5"><span class="lg-id">U5</span><span class="lg-name" id="lg-u5-n">Post-silicon validation</span><span class="lg-cap" id="lg-u5-c">Lab validation of these modules, with JESD protocol test cases and black-box debug under limited visibility.</span></a></li>
@@ -417,6 +419,89 @@
         <p class="form-status" role="status"></p>
       </div>
     </form>
+  </div>
+</dialog>
+<dialog class="explainer" id="explainer-u2" aria-labelledby="ex-u2-title" aria-describedby="ex-u2-lede">
+  <div class="ex-body">
+    <header class="ex-head">
+      <p class="ex-kicker"><span class="ex-chip" aria-hidden="true"></span>U2 · Zoomed in</p>
+      <h2 id="ex-u2-title">DDC/DUC: picking one signal out of the airwaves</h2>
+      <p class="ex-lede" id="ex-u2-lede">A radio-frequency ADC samples the antenna signal directly, capturing a wide slice of spectrum at once, far more than any one signal needs. A digital down-converter (DDC) picks out the one signal you want and cuts the data rate to match. A digital up-converter (DUC) does the reverse when transmitting.</p>
+      <button class="icon-button ex-close" type="button" aria-label="Close" data-ex-close>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </header>
+
+    <div class="ex-main">
+      <figure class="ex-figure">
+        <div class="ex-bar">
+          <div class="ex-seg" role="group" aria-label="Direction">
+            <button type="button" data-ex-mode="ddc" aria-pressed="true">Receive · DDC</button>
+            <button type="button" data-ex-mode="duc" aria-pressed="false">Transmit · DUC</button>
+          </div>
+          <span class="ex-small">Example numbers, not a specific product</span>
+        </div>
+        <div class="ex-chains">
+          <ol class="ex-chain" data-ex-list="ddc" aria-label="Receive signal chain">
+            <li><button class="ex-step" type="button"><span class="ex-sym">ADC</span><span class="ex-t">Sample</span></button></li>
+            <li><button class="ex-step" type="button"><span class="ex-sym">× NCO</span><span class="ex-t">Mix down</span></button></li>
+            <li><button class="ex-step" type="button"><span class="ex-sym">LPF</span><span class="ex-t">Filter</span></button></li>
+            <li><button class="ex-step" type="button"><span class="ex-sym">↓<span data-ex-v="n">8</span></span><span class="ex-t">Decimate</span></button></li>
+            <li><button class="ex-step" type="button"><span class="ex-sym">JESD</span><span class="ex-t">Send</span></button></li>
+          </ol>
+          <ol class="ex-chain" data-ex-list="duc" aria-label="Transmit signal chain">
+            <li><button class="ex-step" type="button"><span class="ex-sym">I/Q</span><span class="ex-t">Start at 0 Hz</span></button></li>
+            <li><button class="ex-step" type="button"><span class="ex-sym">↑<span data-ex-v="n">8</span></span><span class="ex-t">Interpolate</span></button></li>
+            <li><button class="ex-step" type="button"><span class="ex-sym">× NCO</span><span class="ex-t">Mix up</span></button></li>
+            <li><button class="ex-step" type="button"><span class="ex-sym">DAC</span><span class="ex-t">To the DAC</span></button></li>
+          </ol>
+        </div>
+        <svg class="ex-plot" role="img" aria-label="Animated spectrum analyzer. The top trace shows signal strength across frequency, with the wanted signal highlighted. The bottom row shows the individual samples."></svg>
+      </figure>
+
+      <div class="ex-steps">
+        <div class="ex-says">
+          <p class="ex-say" data-ex-say="ddc"><strong>Sample.</strong> The RF ADC turns the antenna signal into numbers, 4 billion a second here, capturing a wide slice of spectrum at once. Read the plot like a radio dial: each bump is a different signal at its own frequency, and you want just the highlighted one. The faint bumps left of 0 Hz are mirror images, which every real-valued signal has.</p>
+          <p class="ex-say" data-ex-say="ddc"><strong>Mix down.</strong> A numerically controlled oscillator (NCO) generates a digital sine and cosine at the wanted signal's frequency. Multiplying every sample by them slides the whole spectrum down by 1.2 GHz, so the wanted signal now sits at 0 Hz.</p>
+          <p class="ex-say" data-ex-say="ddc"><strong>Filter.</strong> A low-pass filter (LPF) keeps only what the lower output rate can carry, here &plusmn;<span data-ex-v="band">250 MHz</span> around 0 Hz, and strips out everything else. In the bottom row, the busy samples settle into the smooth wave of the wanted signal.</p>
+          <p class="ex-say" data-ex-say="ddc"><strong>Decimate.</strong> The wanted signal is now narrow, so far fewer samples can describe it. Keeping 1 sample in <span data-ex-v="n">8</span> cuts the rate from 4 GSPS to <span data-ex-v="out">500 MSPS</span>. The filter is what makes this safe: without it, everything outside the band would fold back on top of the wanted signal, an effect called aliasing. <button class="ex-inline" type="button" data-ex-alias aria-pressed="false">See it without the filter</button></p>
+          <p class="ex-say" data-ex-say="ddc"><strong>Send.</strong> What's left is a stream of complex (I/Q) samples at <span data-ex-v="out">500 MSPS</span>, a fraction of the original data, ready to leave the chip over a JESD204 serial link to an FPGA or processor.</p>
+          <p class="ex-say" data-ex-say="duc"><strong>Start at 0 Hz.</strong> Transmitting runs the same chain backwards. It starts with the signal to send as complex (I/Q) samples, centered on 0 Hz at a low sample rate, here <span data-ex-v="out">500 MSPS</span>.</p>
+          <p class="ex-say" data-ex-say="duc"><strong>Interpolate.</strong> Inserting zeros between the samples raises the rate <span data-ex-v="n">8</span>&times; to 4 GSPS, but leaves copies of the signal, called images, at multiples of the old rate. A low-pass filter removes the images, which also turns the zeros into smoothly interpolated samples.</p>
+          <p class="ex-say" data-ex-say="duc"><strong>Mix up.</strong> An NCO and multiplier slide the signal up to its carrier frequency, 1.2 GHz here. The output is real-valued, so a mirror image appears at &minus;1.2 GHz.</p>
+          <p class="ex-say" data-ex-say="duc"><strong>To the DAC.</strong> The DAC turns the samples back into a continuous wave, ready to be amplified and sent from the antenna.</p>
+        </div>
+        <div class="ex-controls">
+          <div class="ex-nav">
+            <button class="ex-btn" type="button" data-ex-prev>Previous</button>
+            <button class="ex-btn" type="button" data-ex-play>Pause</button>
+            <button class="ex-btn ex-btn-main" type="button" data-ex-next>Next</button>
+          </div>
+          <div class="ex-rate">
+            <span class="ex-rate-label" data-ex-rate-label>Decimate by</span>
+            <div class="ex-seg" role="group" aria-label="Rate change factor">
+              <button type="button" data-ex-rate="4" aria-pressed="false">4</button>
+              <button type="button" data-ex-rate="8" aria-pressed="true">8</button>
+              <button type="button" data-ex-rate="16" aria-pressed="false">16</button>
+            </div>
+          </div>
+        </div>
+        <p class="ex-tip">Tip: the arrow keys step through the chain.</p>
+        <p class="ex-live" aria-live="polite"></p>
+      </div>
+    </div>
+
+    <div class="ex-notes">
+      <section class="ex-card">
+        <h3>Where AI hardware comes in</h3>
+        <p>Filters like the ones in this chain are usually FIR filters: each output sample is a dot product of recent inputs with a fixed set of coefficients, computed as a row of multiply-accumulates. That's the operation AI accelerators repeat billions of times a second. At gigasample rates the hard part is the one AI chips share: fitting all that arithmetic into as little area and power as possible.</p>
+      </section>
+      <section class="ex-card ex-mine">
+        <h3>What I built</h3>
+        <p>At Texas Instruments I architected and implemented the RTL for DDC and DUC modules in high-speed analog front ends. The novel part is hitless rate switching: the rate can change while the chip runs without interrupting the output, and the output's phase stays in a fixed, known relation to SYSREF, the timing reference that keeps multiple converters in step. Try the rate buttons above to see what a rate change does to the spectrum.</p>
+        <a href="#work-dsp" data-ex-jump>See it in my experience</a>
+      </section>
+    </div>
   </div>
 </dialog>
 </body>

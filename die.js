@@ -42,6 +42,9 @@ function flash(target) {
   else target.addEventListener('animationend', clear, { once: true });
 }
 
+// Zoom-in explainers by block id (filled by explain.js). A block with one opens it on click instead of jumping.
+const explainers = new Map();
+
 // Scrolls to an in-page target, highlights it and moves focus there. Returns false if there is no such target.
 function jumpTo(hash) {
   const target = document.querySelector(hash);
@@ -63,6 +66,7 @@ if (die) {
   const roId = readout.querySelector('.ro-id');
   const roName = readout.querySelector('.ro-name');
   const roCap = readout.querySelector('.ro-cap');
+  const roHint = readout.querySelector('.ro-hint');
   const idle = { id: roId.textContent, name: roName.textContent, cap: roCap.textContent };
   const legendLinks = [...document.querySelectorAll('.die-legend a')];
   const art = die.querySelector('.chip-art');
@@ -73,6 +77,8 @@ if (die) {
     return item && { id: item.querySelector('.lg-id').textContent, name: item.querySelector('.lg-name').textContent, cap: item.querySelector('.lg-cap').textContent };
   }
 
+  const EXPLAIN_HINT = 'Click to zoom in.';
+
   // Lay out every caption, hidden, under the live one so the readout keeps one height (see .ro-sizer).
   const liveRow = readout.querySelector('.ro-row');
   for (const info of [idle, ...legendLinks.map(a => describe(a.dataset.block)), describe('art')]) {
@@ -81,6 +87,8 @@ if (die) {
     sizer.querySelector('.ro-id').textContent = info.id;
     sizer.querySelector('.ro-name').textContent = info.name;
     sizer.querySelector('.ro-cap').textContent = info.cap;
+    // Any block may gain an explainer, so every sizer leaves room for the hint.
+    sizer.querySelector('.ro-hint').textContent = EXPLAIN_HINT;
     readout.append(sizer);
   }
 
@@ -90,6 +98,7 @@ if (die) {
     roId.textContent = info.id;
     roName.textContent = info.name;
     roCap.textContent = info.cap;
+    roHint.textContent = explainers.has(blockId) ? EXPLAIN_HINT : '';
     readout.classList.toggle('is-active', info !== idle);
     // Phones show the legend instead of the readout, but the legend has no entry for the chip art.
     readout.classList.toggle('is-art', blockId === 'art');
@@ -120,6 +129,12 @@ if (die) {
         event.preventDefault();
         pinned = true;
         show('art');
+        return;
+      }
+      const explainer = explainers.get(el.dataset.explain);
+      if (explainer) {
+        event.preventDefault();
+        explainer.open(el);
         return;
       }
       if (jumpTo(el.getAttribute('href'))) event.preventDefault();
